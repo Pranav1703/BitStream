@@ -8,4 +8,5 @@ import (
 
 func RegisterRoutes(r *chi.Mux)  {
 	r.Get("/",handler.Root)
+	r.Get("/progress",handler.TorrentProgress)
 }
