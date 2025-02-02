@@ -24,5 +24,6 @@ func TryOut() {
 		time.Sleep(2 * time.Second)
 	}
 	c.WaitAll()
+	
 	log.Print("torrent downloaded")
 }

@@ -1,1 +1,4 @@
 .torrent.db
+.env
+./downloads/
+.torrent.db

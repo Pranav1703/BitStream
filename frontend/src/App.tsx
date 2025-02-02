@@ -1,11 +1,12 @@
 import './App.css'
+import Player from './pages/player'
 
 function App() {
   
 
   return (
     <>
-      init
+      <Player/>
     </>
   )
 }
