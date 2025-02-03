@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"BitStream/internal/util"
 	"fmt"
+	// "io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -72,18 +74,40 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 		http.Error(w, "Failed to initialize torrent client.", http.StatusInternalServerError)
 		return
 	}
-	defer client.Close()
+
 	
-	t,err := client.AddMagnet("magnet:?xt=urn:btih:edf4114173777c0d77eed8fbebba3bdeb7951717&dn=Family.Guy.S08E08.WEB.x264-TORRENTGALAXY&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce")
-	if err != nil {
-		http.Error(w, "Failed to add torrent", http.StatusInternalServerError)
-		return
+	var magnet string = "magnet:?xt=urn:btih:e9eb2ff4fff3db37e617d331153c75d2bc87c497&dn=The.Rookie.S07E04.HDTV.x264-TORRENTGALAXY&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce"
+
+	var t *torrent.Torrent
+	torrentHash := util.ExtractHashFromMagnet(magnet)
+
+	fmt.Println(torrentHash)
+	fmt.Println(client.Torrents())
+	for _, existingT := range client.Torrents() {
+		if existingT.InfoHash().HexString() == torrentHash {
+			t = existingT
+			fmt.Println("Existing torrent Hash: ",existingT.InfoHash())
+			break
+		}
 	}
-	
-	<-t.GotInfo()
 
-	t.DownloadAll()
 
+	// If the torrent is not already added, add it
+	if t == nil {
+		var err error
+		t, err = client.AddMagnet(magnet)
+		if err != nil {
+			http.Error(w, "Failed to add torrent", http.StatusInternalServerError)
+			return
+		}
+		<-t.GotInfo()
+		fmt.Println("downloading...")
+		t.DownloadAll()
+	} else {
+		log.Println("Reusing existing torrent")
+	}
+
+	// Find the largest video file
 	var videoFile *torrent.File
 	for _, file := range t.Files() {
 		if isVideoFile(file.Path()) && (videoFile == nil || file.Length() > videoFile.Length()) {
@@ -96,18 +120,57 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 		return
 	}
 
-	for videoFile.BytesCompleted() < (videoFile.Length()/25) {
-		time.Sleep(2 * time.Second) 
-		log.Printf("Waiting for data... %d/%d bytes downloaded", videoFile.BytesCompleted(), videoFile.Length())
-	}
 
+
+	for {
+		downloaded := videoFile.BytesCompleted()
+		totalSize := videoFile.Length()
+		if downloaded >= (videoFile.Length() / 20) {
+			break 
+		}
+		log.Printf(" %d/%d bytes. downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
+		time.Sleep(2 * time.Second)
+	}
+	util.MonitorTorrent(videoFile.Torrent())
+	// startSending := make(chan struct{}) 
+	// sentSignal := false 
+	// go func() {
+	// 	defer close(startSending) // Close channel once
+	
+	// 	for {
+	// 		downloaded := videoFile.BytesCompleted()
+	// 		totalSize := videoFile.Length()
+	
+	// 		switch {
+	// 		case !sentSignal && downloaded >= (totalSize/25):
+	// 			log.Println("Enough data available, starting stream...")
+	// 			sentSignal = true
+	// 			startSending <- struct{}{}
+	
+	// 		case downloaded >= totalSize:
+	// 			log.Println("Download complete.")
+	// 			return // Exit goroutine
+	
+	// 		default:
+	// 			log.Printf(" %d/%d bytes. downloaded (%.2f%%)", 
+	// 				downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
+	// 			time.Sleep(2 * time.Second)
+	// 		}
+	// 	}
+	// }()
+	
+	// <-startSending
+	
 	reader := videoFile.NewReader()
 	defer reader.Close()
 
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", videoFile.Length()))
 	w.Header().Set("Content-Type", "video/mp4")
 	w.Header().Set("Accept-Ranges", "bytes") // Enable seeking
 
-	http.ServeContent(w, r, videoFile.DisplayPath(), time.Unix(videoFile.Torrent().Metainfo().CreationDate, 0), reader)
+	//http.ServeContent(w, r, videoFile.DisplayPath(), time.Unix(videoFile.Torrent().Metainfo().CreationDate, 0), reader)
+	http.ServeContent(w, r, videoFile.DisplayPath(), time.Now(), reader)
+
 }
 
 // Check if the file is a video
