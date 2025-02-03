@@ -1,38 +1,48 @@
 package util
 
 import (
+	"fmt"
+	"log"
 	"net/url"
 	"strings"
 	"sync"
-    "log"
-	"github.com/anacrolix/torrent"
 	"time"
+
+	"github.com/anacrolix/torrent"
 )
 
-// "fmt"
+var Client *torrent.Client
+// type TorrentClient struct {
+//     Client *torrent.Client
+//     CurrentTor sync.Map
+// }
 
+func InitTorrentClient() (error) {
+	if Client != nil {
+		return nil // Client is already initialized
+	}
 
+	cfg := torrent.NewDefaultClientConfig()
+	cfg.DataDir = "./downloads"
 
-// "github.com/anacrolix/torrent"
-
-func ExtractHashFromMagnet(magnet string) string {
-	parsed, err := url.Parse(magnet)
+    var err error
+	Client, err = torrent.NewClient(cfg)
 	if err != nil {
-		return ""
+		return fmt.Errorf("failed to initialize torrent client: %w", err)
 	}
-	query := parsed.Query().Get("xt")
-	if strings.HasPrefix(query, "urn:btih:") {
-		return strings.TrimPrefix(query, "urn:btih:")
-	}
-    
-	return ""
+	return nil
 }
+
+func CloseClient(){
+    Client.Close()
+}
+
 var torrentProgress = sync.Map{} // Global map to track torrent progress
 
 func MonitorTorrent(t *torrent.Torrent) {
     torrentHash := t.InfoHash().HexString()
     if _, exists := torrentProgress.Load(torrentHash); exists {
-        return // Already being monitored
+        return 
     }
 
     torrentProgress.Store(torrentHash, true) // Mark as monitored
@@ -45,13 +55,25 @@ func MonitorTorrent(t *torrent.Torrent) {
 
             if downloaded >= totalSize {
                 log.Println("Download complete for:", torrentHash)
-                return // Stop monitoring
+                return 
             }
 
-            log.Printf("%s: %d/%d bytes downloaded (%.2f%%)",
-                torrentHash, downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
+            log.Printf("%d/%d bytes downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
 
             time.Sleep(2 * time.Second)
         }
     }()
+}
+
+func ExtractHashFromMagnet(magnet string) string {
+	parsed, err := url.Parse(magnet)
+	if err != nil {
+		return ""
+	}
+	query := parsed.Query().Get("xt")
+	if strings.HasPrefix(query, "urn:btih:") {
+		return strings.TrimPrefix(query, "urn:btih:")
+	}
+    
+	return ""
 }

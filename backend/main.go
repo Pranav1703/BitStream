@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "BitStream/internal/torrent"
+	"BitStream/internal/util"
 	"BitStream/server"
 	"os"
 	"os/signal"
@@ -15,7 +15,7 @@ func main(){
 	
 	closeSignal := make(chan os.Signal,1)
 	signal.Notify(closeSignal,syscall.SIGINT,syscall.SIGTERM)
-	
+		
 	r := chi.NewRouter()
 	
 	r.Use(cors.Handler(cors.Options{
@@ -31,8 +31,11 @@ func main(){
 
 	server.RegisterRoutes(r)
 	go server.StartServer(r)
-	// torrent.TryOut()
+	
 	<-closeSignal
+	if util.Client!=nil {
+		util.CloseClient()
+	}
 	server.StopServer()
 	
 
