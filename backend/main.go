@@ -3,8 +3,10 @@ package main
 import (
 	"BitStream/internal/util"
 	"BitStream/server"
+	"fmt"
 	"os"
 	"os/signal"
+
 	"syscall"
 
 	"github.com/go-chi/chi/v5"
@@ -27,9 +29,30 @@ func main(){
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
-	  }))
+	}))
+
+	if _,err:= os.Stat("./downloads");err!=nil{
+		if os.IsNotExist(err){
+			if err := os.Mkdir("./downloads", os.ModePerm); err != nil {
+				fmt.Println("Error creating directory:", err)
+			}else{
+				fmt.Println("created a new Dir for downloads")
+			}
+		}else{
+			fmt.Println(err)
+		}
+	}else{
+		dirInfo,err := os.Stat("./downloads")
+		
+		if err != nil {
+			fmt.Println("error reading the Dir.",err)
+			return 
+		}
+		fmt.Printf("%v directory already exists. perm: %v\n",dirInfo.Name(),dirInfo.Mode())
+	}
 
 	server.RegisterRoutes(r)
+	fmt.Println("Starting Server...")
 	go server.StartServer(r)
 	
 	<-closeSignal
