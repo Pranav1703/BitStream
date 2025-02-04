@@ -6,7 +6,7 @@ const Player = () => {
   const [streamURL, setStreamURL] = useState("");
 
   const handleStream = () => {
-    setStreamURL(`http://localhost:3000/stream}`);
+    setStreamURL(`http://localhost:3000/stream`);
   };
 
   return (

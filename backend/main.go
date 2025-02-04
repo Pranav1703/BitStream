@@ -52,13 +52,18 @@ func main(){
 	}
 
 	server.RegisterRoutes(r)
-	fmt.Println("Starting Server...")
+
 	go server.StartServer(r)
-	
+	fmt.Println("server started.")
+
 	<-closeSignal
 	if util.Client!=nil {
 		util.CloseClient()
 	}
+
+	fmt.Println("removing downloads dir")
+	os.RemoveAll("./downloads")
+
 	server.StopServer()
 	
 
