@@ -1,32 +1,29 @@
 package database
 
 import (
-	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var Db *gorm.DB
+type Database struct{
+	Db *gorm.DB
+}
 
-func InitDb(){
+func InitDb() (*Database,error){
 	var err error
 	Db, err = gorm.Open(postgres.New(postgres.Config{
-		DSN: "user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai",
+		DSN: "user=postgres password=popcat dbname=BitStream sslmode=disable",
 		PreferSimpleProtocol: true, // disables implicit prepared statement usage
 	  }), &gorm.Config{})
 
 	if err != nil {
-		log.Println(err)
-		return
+		return nil,err
 	}	
+	return &Database{Db: Db},nil
 }
 
-func GetDb()*gorm.DB{
-	if Db!=nil{
-		return Db
-	}
-	return nil
+func (db *Database) GetDb()*gorm.DB{
+	return db.Db
 }
-
-//check db conn is pgadmin...

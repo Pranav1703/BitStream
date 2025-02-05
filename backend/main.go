@@ -1,15 +1,18 @@
 package main
 
 import (
+	"BitStream/internal/database"
 	"BitStream/internal/util"
 	"BitStream/server"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 
 	"syscall"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 )
 
@@ -20,6 +23,8 @@ func main(){
 		
 	r := chi.NewRouter()
 	
+	r.Use(middleware.Logger)
+
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins:   []string{"https://*", "http://*"},
@@ -52,6 +57,15 @@ func main(){
 	}
 
 	server.RegisterRoutes(r)
+
+	DbInstance ,err := database.InitDb()
+	if err != nil {
+		log.Panicln(err)
+		return 
+	}
+
+	db := DbInstance.GetDb()
+	db.AutoMigrate()
 
 	go server.StartServer(r)
 	fmt.Println("server started.")
