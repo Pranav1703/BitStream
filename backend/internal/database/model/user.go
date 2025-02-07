@@ -6,4 +6,4 @@ type User struct{
 	Password 	string	`gorm:"not null;unique"`
 }
 
-//use gorm.model {id,createdAt,updatedAt}
+//gorm.model -> {id,createdAt,updatedAt}

@@ -7,9 +7,13 @@ import (
 )
 
 func RegisterRoutes(r *chi.Mux)  {
+	
 	r.Get("/",handler.Root)
+	r.Get("/test",handler.TestDbFunc)
+	
 	r.Get("/progress",handler.TorrentProgress)
 	r.Get("/stream",handler.StreamVideo)
+	
 	r.Post("/user",handler.RegisterUser)
 }
 

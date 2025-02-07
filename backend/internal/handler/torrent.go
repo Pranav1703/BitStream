@@ -63,12 +63,12 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 	// var _ string = "magnet:?xt=urn:btih:e9eb2ff4fff3db37e617d331153c75d2bc87c497&dn=The.Rookie.S07E04.HDTV.x264-TORRENTGALAXY&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce"
 
 	//solo leveling s02
-	// var _ string = "magnet:?xt=urn:btih:1a6273a56e25d7dea3673497c2ffb9221596265b&dn=Solo%20Leveling%20-%20S02E05%20-%20This%20is%20What%20We%27re%20Trained%20to%20Do%20[Web][1080p][HEVC%2010bit%20x26...&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce"
+	//var _ string = "magnet:?xt=urn:btih:1a6273a56e25d7dea3673497c2ffb9221596265b&dn=Solo%20Leveling%20-%20S02E05%20-%20This%20is%20What%20We%27re%20Trained%20to%20Do%20[Web][1080p][HEVC%2010bit%20x26...&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce"
 
 	var t *torrent.Torrent
 	torrentHash := util.ExtractHashFromMagnet(magnet)
 
-	fmt.Println(util.Client.Torrents())
+	fmt.Println("Current torrent: ",util.Client.Torrents())
 	for _, existingT := range util.Client.Torrents() {
 		if existingT.InfoHash().HexString() == torrentHash {
 			t = existingT

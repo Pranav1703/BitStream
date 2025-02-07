@@ -36,11 +36,3 @@ func StopServer(){
 	
 	fmt.Println("Server Stopped.")
 }
-
-// func Test(){
-// 	print()
-// }
-
-// func print(){
-// 	fmt.Println("in exported func")
-// }

@@ -58,14 +58,13 @@ func main(){
 
 	server.RegisterRoutes(r)
 
-	DbInstance ,err := database.InitDb()
+	err := database.InitDb()
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
+		fmt.Println("err db :")
 		return 
 	}
-
-	db := DbInstance.GetDb()
-	db.AutoMigrate()
+	fmt.Println("connected to DB.")
 
 	go server.StartServer(r)
 	fmt.Println("server started.")
@@ -78,7 +77,8 @@ func main(){
 	fmt.Println("removing downloads dir")
 	os.RemoveAll("./downloads")
 
+	database.CloseDb()
 	server.StopServer()
-	
+
 
 }
