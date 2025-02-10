@@ -4,9 +4,13 @@ import {
   PasswordStrengthMeter,
 } from "../components/ui/password-input"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 
 const Login = () => {
   
+  const [username,setUsername] = useState<string>("")
+  const [pass,setPass] = useState<string>("")
+
   return (
     <Box h={"100vh"} w={"100vw"} display={"flex"}>
       
@@ -20,8 +24,8 @@ const Login = () => {
         
         >
           <Text fontSize={"x-large"} fontWeight={"bolder"}>Login</Text>
-          <Input placeholder="Enter Username" w={"350px"} variant={"flushed"}/>
-          <PasswordInput placeholder="Enter Password" variant={"flushed"}/>
+          <Input placeholder="Enter Username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
+          <PasswordInput placeholder="Enter Password" value={pass} onChange={(e)=>setPass(e.target.value)} variant={"flushed"}/>
           <PasswordStrengthMeter value={1} w={"100%"}/>
           <Button>
             Login
