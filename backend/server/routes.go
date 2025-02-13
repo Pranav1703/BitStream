@@ -4,17 +4,20 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"BitStream/internal/handler"
+	"BitStream/internal/authMiddleware"
 )
 
 func RegisterRoutes(r *chi.Mux)  {
 	
+
 	r.Get("/",handler.Root)
 	r.Get("/test",handler.TestDbFunc)
 	
-	r.Get("/progress",handler.TorrentProgress)
-	r.Get("/stream",handler.StreamVideo)
-	
-	r.Post("/user",handler.RegisterUser)
+	r.Post("/login",handler.Login)
+	r.Post("/signup",handler.RegisterUser)	
+	r.With(authmiddleware.AuthenticateToken).Get("/progress",handler.TorrentProgress)
+	r.With(authmiddleware.AuthenticateToken).Get("/stream",handler.StreamVideo)
+
 }
 
 // chi routing docs

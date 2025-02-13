@@ -5,11 +5,31 @@ import {
 } from "../components/ui/password-input"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import axios from "axios"
 
 const Login = () => {
   
   const [username,setUsername] = useState<string>("")
   const [pass,setPass] = useState<string>("")
+  const [msg,setMsg] = useState<string>("")
+
+  const submit = ()=>{
+    if(username && pass){
+      try {
+        axios.post(`${import.meta.env.VITE_SERVER}/login`,{
+          username,
+          pass
+        })
+      } catch (error) {
+        console.log(error)
+        setMsg(`${error}`)
+      }
+
+    }else{
+      setMsg("Fill all Fields")
+    }
+  }
+
 
   return (
     <Box h={"100vh"} w={"100vw"} display={"flex"}>
@@ -27,7 +47,12 @@ const Login = () => {
           <Input placeholder="Enter Username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
           <PasswordInput placeholder="Enter Password" value={pass} onChange={(e)=>setPass(e.target.value)} variant={"flushed"}/>
           <PasswordStrengthMeter value={1} w={"100%"}/>
-          <Button>
+          <Text>
+            {msg}
+          </Text>
+          <Button
+          onClick={submit}
+          >
             Login
           </Button>
           <Text>
