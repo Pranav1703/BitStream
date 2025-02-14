@@ -15,8 +15,12 @@ func RegisterRoutes(r *chi.Mux)  {
 	
 	r.Post("/login",handler.Login)
 	r.Post("/signup",handler.RegisterUser)	
+	r.Get("/auth",handler.CheckAuth)
+	r.Get("/logout",handler.Logout)
+
 	r.With(authmiddleware.AuthenticateToken).Get("/progress",handler.TorrentProgress)
-	r.Get("/stream",handler.StreamVideo)
+	r.With(authmiddleware.AuthenticateToken).Get("/stream",handler.StreamVideo)
+	
 
 }
 

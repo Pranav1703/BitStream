@@ -74,6 +74,7 @@ func Login(w http.ResponseWriter,r *http.Request){
 
 	tokenString, err := util.CreateToken(user.Username)
 	if err != nil {
+		fmt.Println(err)
 	    http.Error(w, "Failed to generate token", http.StatusInternalServerError)
 	    return
 	}
@@ -85,15 +86,27 @@ func Login(w http.ResponseWriter,r *http.Request){
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	// Expire the cookie
+	
 	http.SetCookie(w, &http.Cookie{
-		Name:     "auth_token",
+		Name:     "access-token",
 		Value:    "",
 		HttpOnly: true,
 		Secure:   false, // Set to true in production with HTTPS
 		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
-		Expires:  time.Unix(0, 0), // Expired time
+		Expires:  time.Unix(0, 0), 
 	})
 
 	w.Write([]byte("Logged out successfully"))
+}
+
+func CheckAuth(w http.ResponseWriter, r *http.Request) {
+	username, err := util.VerifyToken(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(username))
 }
