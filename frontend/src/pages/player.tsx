@@ -11,7 +11,6 @@ const Player = () => {
 
   return (
     <div>
-      <h2>BitStream - Torrent Video Streaming</h2>
       <input
         type="text"
         placeholder="Enter Magnet Link"

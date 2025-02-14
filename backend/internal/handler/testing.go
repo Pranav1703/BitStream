@@ -3,6 +3,7 @@ package handler
 import (
 	"BitStream/internal/database"
 	"BitStream/internal/database/model"
+	"BitStream/internal/util"
 	"fmt"
 	"net/http"
 )
@@ -28,5 +29,9 @@ func TestDbFunc(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	w.Write([]byte(fmt.Sprintf("%v",users)))
+	
+}
+
+func Scrape(w http.ResponseWriter, r *http.Request){
 	
 }

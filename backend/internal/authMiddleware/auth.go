@@ -23,7 +23,6 @@ func AuthenticateToken(next http.Handler) http.Handler{
 		}
 	
 		tokenString := cookie.Value
-		fmt.Println(tokenString)
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			// Validate the signing method

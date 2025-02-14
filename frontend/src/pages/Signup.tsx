@@ -1,6 +1,6 @@
 import { Box, VStack, Input,Text, Button } from "@chakra-ui/react"
 import { PasswordInput, PasswordStrengthMeter } from "../components/ui/password-input"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 

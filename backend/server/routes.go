@@ -21,7 +21,7 @@ func RegisterRoutes(r *chi.Mux)  {
 	r.With(authmiddleware.AuthenticateToken).Get("/progress",handler.TorrentProgress)
 	r.With(authmiddleware.AuthenticateToken).Get("/stream",handler.StreamVideo)
 	
-
+	r.Get("/scrape",handler.Scrape)
 }
 
 // chi routing docs

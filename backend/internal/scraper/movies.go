@@ -1,0 +1,6 @@
+package scraper
+
+func ScrapeMovies(){
+	
+}
+
