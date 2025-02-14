@@ -16,7 +16,7 @@ const userContextKey contextKey = "user"
 func AuthenticateToken(next http.Handler) http.Handler{
 	secretKey := util.SecretKey
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("jwt")
+		cookie, err := r.Cookie("access-token")
 		if err != nil {
 			http.Error(w, "JWT cookie missing", http.StatusUnauthorized)
 			return
@@ -38,10 +38,10 @@ func AuthenticateToken(next http.Handler) http.Handler{
 		}
 
 		// Pass the context with the token claims
+		fmt.Println("token claims: ",token.Claims)
 		ctx := context.WithValue(r.Context(), userContextKey, token.Claims)
 		r = r.WithContext(ctx)
 
-		// Continue to the next handler
 		next.ServeHTTP(w, r)
 
 	})

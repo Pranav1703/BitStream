@@ -1,6 +1,7 @@
 package util
 
 import (
+	"net/http"
 	"os"
 	"time"
 
@@ -23,5 +24,18 @@ func CreateToken(username string)(string,error){
     }
 	return tokenString,nil
 
+}
+
+func SetAuthCookie(w http.ResponseWriter, token string) {
+	cookie := &http.Cookie{
+		Name:     "access-token",
+		Value:    token,
+		HttpOnly: true,          
+		Secure:   false,         
+		SameSite: http.SameSiteNoneMode,
+		Path:     "/",
+	}
+	http.SetCookie(w, cookie)
+	
 }
 

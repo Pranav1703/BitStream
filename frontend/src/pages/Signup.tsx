@@ -2,7 +2,7 @@ import { Box, VStack, Input,Text, Button } from "@chakra-ui/react"
 import { PasswordInput, PasswordStrengthMeter } from "../components/ui/password-input"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
 const Signup = () => {
 
@@ -28,13 +28,21 @@ const Signup = () => {
 
   const submit = async()=>{
     if(checkFields()){
-        await axios.post(`${import.meta.env.VITE_SERVER}/signup`,{
-          username,
-          password: p1
+      try {
+        const resp = await axios.post(`${import.meta.env.VITE_SERVER}/signup`,{
+          username: username.trim(),
+          password: p1.trim()
         })
+        console.log(resp)
         setUsername("")
         setP1("")
         setP2("")
+      } catch (error) {
+          console.log(error)
+          const err = error as AxiosError
+          const resp = err.response?.data
+          setMsg(`${resp}`)
+      }
     }
     return
   }

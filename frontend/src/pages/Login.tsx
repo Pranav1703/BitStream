@@ -4,26 +4,40 @@ import {
   PasswordStrengthMeter,
 } from "../components/ui/password-input"
 import { Link } from "react-router-dom"
-import { useState } from "react"
-import axios from "axios"
+import { useContext, useState } from "react"
+import axios, { AxiosError } from "axios"
+import { UserContext } from "../App"
 
 const Login = () => {
   
   const [username,setUsername] = useState<string>("")
   const [pass,setPass] = useState<string>("")
   const [msg,setMsg] = useState<string>("")
+  const {setUser} = useContext(UserContext)
 
-  const submit = ()=>{
+  const submit = async()=>{
+
     if(username && pass){
+      
       try {
-        axios.post(`${import.meta.env.VITE_SERVER}/login`,{
-          username,
-          pass
+        const resp = await axios.post(`${import.meta.env.VITE_SERVER}/login`,{
+          username: username.trim(),
+          password: pass.trim()
+        },{
+          withCredentials: true
         })
+        console.log(resp)
+        
+        setUser(username)
+
       } catch (error) {
         console.log(error)
-        setMsg(`${error}`)
+        const err = error as AxiosError
+        const resp = err.response?.data
+        setMsg(`${resp}`)
       }
+      setUsername("")
+      setPass("")
 
     }else{
       setMsg("Fill all Fields")

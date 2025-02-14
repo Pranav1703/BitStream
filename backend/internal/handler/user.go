@@ -3,10 +3,11 @@ package handler
 import (
 	"BitStream/internal/database"
 	"BitStream/internal/database/model"
+	"BitStream/internal/util"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -24,7 +25,6 @@ func RegisterUser(w http.ResponseWriter,r *http.Request) {
 		http.Error(w,"couldnt decode request body",http.StatusInternalServerError)
 		return 
 	}
-	fmt.Printf("%v\n",&userInfo)
 
 	db := database.GetDb()
 
@@ -65,26 +65,35 @@ func Login(w http.ResponseWriter,r *http.Request){
 		return
 	}
 
-	if result.Error != nil {
-		http.Error(w, "Failed to fetch user", http.StatusInternalServerError)
-		return
-	}
-
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userInfo.Password))
 	if err != nil {
+		fmt.Println("error login : ",err)
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
 
-	// Passwords match, you can generate a JWT token here (not implemented yet)
-	// For example:
-	// tokenString, err := generateJWTToken(user)
-	// if err != nil {
-	//     http.Error(w, "Failed to generate token", http.StatusInternalServerError)
-	//     return
-	// }
+	tokenString, err := util.CreateToken(user.Username)
+	if err != nil {
+	    http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+	    return
+	}
 
-	// For now, just send a success response (you should return a JWT in a real app)
+	util.SetAuthCookie(w,tokenString)
+
 	fmt.Fprintf(w, "Login successful for user: %s", user.Username)
+}
 
+func Logout(w http.ResponseWriter, r *http.Request) {
+	// Expire the cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "auth_token",
+		Value:    "",
+		HttpOnly: true,
+		Secure:   false, // Set to true in production with HTTPS
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		Expires:  time.Unix(0, 0), // Expired time
+	})
+
+	w.Write([]byte("Logged out successfully"))
 }

@@ -43,7 +43,7 @@ function App() {
               </>
             )
           }
-          {/* <Route path='/player' element={<Player/>}/> */}
+          <Route path='/player' element={<Player/>}/>
         </Routes>
         
       </Router>
