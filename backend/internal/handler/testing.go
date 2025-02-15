@@ -3,7 +3,7 @@ package handler
 import (
 	"BitStream/internal/database"
 	"BitStream/internal/database/model"
-	"BitStream/internal/util"
+	"BitStream/internal/scraper"
 	"fmt"
 	"net/http"
 )
@@ -33,5 +33,5 @@ func TestDbFunc(w http.ResponseWriter, r *http.Request){
 }
 
 func Scrape(w http.ResponseWriter, r *http.Request){
-	
+	scraper.ScrapeMovies()
 }
