@@ -3,7 +3,6 @@ package authmiddleware
 import (
 	"BitStream/internal/util"
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -37,7 +36,6 @@ func AuthenticateToken(next http.Handler) http.Handler{
 		}
 
 		// Pass the context with the token claims
-		fmt.Println("token claims: ",token.Claims)
 		ctx := context.WithValue(r.Context(), userContextKey, token.Claims)
 		r = r.WithContext(ctx)
 

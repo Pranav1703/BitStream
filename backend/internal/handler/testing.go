@@ -4,6 +4,7 @@ import (
 	"BitStream/internal/database"
 	"BitStream/internal/database/model"
 	"BitStream/internal/scraper"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -33,5 +34,13 @@ func TestDbFunc(w http.ResponseWriter, r *http.Request){
 }
 
 func Scrape(w http.ResponseWriter, r *http.Request){
-	scraper.ScrapeMovies()
+	movies := scraper.ScrapeMovies()
+
+	w.Header().Set("Content-Type", "application/json")
+	
+	err := json.NewEncoder(w).Encode(movies)
+	if err != nil {
+		http.Error(w, "Failed to encode movies", http.StatusInternalServerError)
+		return
+	}
 }

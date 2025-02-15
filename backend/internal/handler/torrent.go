@@ -51,7 +51,7 @@ func TorrentProgress(w http.ResponseWriter,r *http.Request){
 
 func StreamVideo(w http.ResponseWriter,r *http.Request){
 	params := r.URL.Query()
-	fmt.Println("Params: ",params.Get("magnet"))
+	// fmt.Println("Params: ",params.Get("magnet"))
 	magnet := params.Get("magnet")
 
 	if err := util.InitTorrentClient(); err != nil {
@@ -85,7 +85,7 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 			return
 		}
 		<-t.GotInfo()
-		fmt.Println("downloading...")
+		log.Println("downloading...")
 		t.DownloadAll()
 	} else {
 		log.Println("Reusing existing torrent")

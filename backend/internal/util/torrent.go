@@ -41,6 +41,7 @@ var torrentProgress = sync.Map{} // Global map to track torrent progress
 
 func MonitorTorrent(t *torrent.Torrent) {
     torrentHash := t.InfoHash().HexString()
+	name := t.Name()
     if _, exists := torrentProgress.Load(torrentHash); exists {
         return 
     }
@@ -54,7 +55,7 @@ func MonitorTorrent(t *torrent.Torrent) {
             totalSize := t.Length()
 
             if downloaded >= totalSize {
-                log.Println("Download complete for:", torrentHash)
+                log.Println("Download complete for:", name)
                 return 
             }
 
