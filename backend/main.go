@@ -64,6 +64,7 @@ func main(){
 		fmt.Println("err db :")
 		return 
 	}
+	
 	fmt.Println("connected to DB.")
 
 	go server.StartServer(r)

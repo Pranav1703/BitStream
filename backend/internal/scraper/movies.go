@@ -19,7 +19,7 @@ type Movie struct{
 }
 
 
-func ScrapeMovies() []Movie {
+func ScrapeRecentMovies() []Movie {
 	c := colly.NewCollector()
 
 	var movies []Movie
@@ -84,3 +84,17 @@ func ScrapeMovies() []Movie {
 	return movies
 }
 
+func MovieSearchResults(query string) {
+	c := colly.NewCollector()
+
+
+
+	c.OnResponse(func(r *colly.Response) {
+		fmt.Println("\nGot response from ", r.Request.URL)
+	})
+
+	err := c.Visit(fmt.Sprintf("https://www.5movierulz.soy/search_movies?s=%s",query))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
