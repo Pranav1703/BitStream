@@ -19,6 +19,6 @@ func RecentMovies(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func SearchResults(w http.ResponseWriter, r *http.Request) {
-	searchQuery := r.URL.Query().Get("search")
+func SearchMovies(w http.ResponseWriter, r *http.Request) {
+	_ = r.URL.Query().Get("search")
 }
