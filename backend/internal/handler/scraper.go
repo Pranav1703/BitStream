@@ -20,5 +20,13 @@ func RecentMovies(w http.ResponseWriter, r *http.Request){
 }
 
 func SearchMovies(w http.ResponseWriter, r *http.Request) {
-	_ = r.URL.Query().Get("search")
+	searchQuery := r.URL.Query().Get("s")
+	result := scraper.MovieSearchResults(searchQuery)
+
+	err := json.NewEncoder(w).Encode(result)
+	if err != nil {
+		http.Error(w, "Failed to encode movies", http.StatusInternalServerError)
+		return
+	}
+
 }

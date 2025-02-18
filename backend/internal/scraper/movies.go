@@ -18,6 +18,11 @@ type Movie struct{
 	Magnets []Magnet
 }
 
+type SearchResults struct {
+	Msg string
+	Movies []Movie
+}
+
 
 func ScrapeRecentMovies() []Movie {
 	c := colly.NewCollector()
@@ -84,10 +89,22 @@ func ScrapeRecentMovies() []Movie {
 	return movies
 }
 
-func MovieSearchResults(query string) {
+func MovieSearchResults(query string) *SearchResults{
 	c := colly.NewCollector()
+	sr := &SearchResults{}
+	_ = []Movie{}
+	c.OnHTML(".content",func(h *colly.HTMLElement){
+		noResults := h.ChildText("h1")
+		if noResults!= ""{
+			sr.Msg = fmt.Sprintf("No results found for '%s'",query)
+			return 
+		}
+	})
 
+	c.OnHTML(".boxed",func(h *colly.HTMLElement) {
 
+		h.Request.Visit(h.ChildAttr("a","href"))
+	})
 
 	c.OnResponse(func(r *colly.Response) {
 		fmt.Println("\nGot response from ", r.Request.URL)
@@ -97,4 +114,6 @@ func MovieSearchResults(query string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	return sr
 }
