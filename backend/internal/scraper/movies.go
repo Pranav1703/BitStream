@@ -92,13 +92,39 @@ func ScrapeRecentMovies() []Movie {
 func MovieSearchResults(query string) *SearchResults{
 	c := colly.NewCollector()
 	sr := &SearchResults{}
-	_ = []Movie{}
+	movies := []Movie{}
 	c.OnHTML(".content",func(h *colly.HTMLElement){
 		noResults := h.ChildText("h1")
 		if noResults!= ""{
 			sr.Msg = fmt.Sprintf("No results found for '%s'",query)
 			return 
 		}
+	})
+
+	c.OnHTML(".entry-content",func(e *colly.HTMLElement) {
+		movie := &Movie{}
+		var magnetLinks []string
+		var linkInfos []string
+
+		title:=e.ChildAttr("img","alt")
+		movie.Title = strings.TrimSpace(title)
+
+		url := e.ChildAttr("img","src")
+		movie.ImgUrl = url
+
+		linkInfos = e.ChildTexts(".mv_button_css>small")
+		magnetLinks = e.ChildAttrs(".mv_button_css","href")
+
+		for i:=0; i<len(linkInfos); i++{
+			magnet := &Magnet{}
+			magnet.Info = linkInfos[i]
+			magnet.Link = magnetLinks[i]
+
+			movie.Magnets = append(movie.Magnets, *magnet)
+		}
+		
+		movies = append(movies, *movie)
+
 	})
 
 	c.OnHTML(".boxed",func(h *colly.HTMLElement) {
@@ -114,6 +140,8 @@ func MovieSearchResults(query string) *SearchResults{
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	if len(movies)!= 0{
+		sr.Movies = movies
+	}
 	return sr
 }
