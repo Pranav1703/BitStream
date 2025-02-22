@@ -12,3 +12,15 @@ The original web server can be years dead, yet the magnet URL can still keep wor
 
 Magnet Link → Finds peers and downloads .torrent file.
 Torrent File → Guides the client to find and download the actual files.
+
+
+nyaa.si :
+From the site itself:
+
+Green entries (trusted) are: Torrents uploaded by trusted users.
+
+Red entries (remake) are torrents that match any of the following: Reencode of original release. Remux of another uploader's original release for hardsubbing and/or fixing purposes. Reupload of original release using non-original file names. Reupload of original release with missing and/or unrelated additional files.
+
+Orange entries are: Batches of completed series.
+
+Grey entries are: Hidden torrents.

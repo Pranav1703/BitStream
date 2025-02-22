@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
+
 	"github.com/gocolly/colly/v2"
 )
 
@@ -90,9 +92,18 @@ func ScrapeRecentMovies() []Movie {
 }
 
 func MovieSearchResults(query string) *SearchResults{
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		
+	)
+
+	c.Limit(&colly.LimitRule{
+		Parallelism: 3,
+		Delay:       500 * time.Millisecond ,
+	})
+
 	sr := &SearchResults{}
 	movies := []Movie{}
+
 	c.OnHTML(".content",func(h *colly.HTMLElement){
 		noResults := h.ChildText("h1")
 		if noResults!= ""{
@@ -131,9 +142,14 @@ func MovieSearchResults(query string) *SearchResults{
 
 		h.Request.Visit(h.ChildAttr("a","href"))
 	})
+	
+	//pagination scraping
+	// for i:=2;i<4;i++{
+	// 	c.Visit(fmt.Sprintf("https://www.5movierulz.spa/search_movies/page/%d?s=hi",i))
+	// }
 
 	c.OnResponse(func(r *colly.Response) {
-		fmt.Println("\nGot response from ", r.Request.URL)
+		// fmt.Println("\nGot response from ", r.Request.URL)
 	})
 
 	err := c.Visit(fmt.Sprintf("https://www.5movierulz.soy/search_movies?s=%s",query))
