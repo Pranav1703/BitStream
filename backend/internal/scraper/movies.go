@@ -144,7 +144,7 @@ func MovieSearchResults(query string) *SearchResults{
 	})
 	
 	//pagination scraping
-	// for i:=2;i<4;i++{
+	// for i:=2;i<5;i++{
 	// 	c.Visit(fmt.Sprintf("https://www.5movierulz.spa/search_movies/page/%d?s=hi",i))
 	// }
 

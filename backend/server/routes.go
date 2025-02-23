@@ -26,6 +26,8 @@ func RegisterRoutes(r *chi.Mux)  {
 		r.Get("/search",handler.SearchMovies)
 	})
 
+	r.Get("/anime",handler.SearchAnime)
+
 }
 
 // chi routing docs

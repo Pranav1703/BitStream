@@ -30,3 +30,15 @@ func SearchMovies(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func SearchAnime(w http.ResponseWriter, r *http.Request) {
+	searchQuery := r.URL.Query().Get("s")
+	scraper.SearchAnime(searchQuery)
+
+	err := json.NewEncoder(w).Encode("")
+	if err != nil {
+		http.Error(w, "Failed to encode movies", http.StatusInternalServerError)
+		return
+	}
+
+}
