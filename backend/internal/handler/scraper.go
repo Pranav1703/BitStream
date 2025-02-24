@@ -25,7 +25,7 @@ func SearchMovies(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
-		http.Error(w, "Failed to encode movies", http.StatusInternalServerError)
+		http.Error(w, "Failed to encode movie search results", http.StatusInternalServerError)
 		return
 	}
 
@@ -33,11 +33,11 @@ func SearchMovies(w http.ResponseWriter, r *http.Request) {
 
 func SearchAnime(w http.ResponseWriter, r *http.Request) {
 	searchQuery := r.URL.Query().Get("s")
-	scraper.SearchAnime(searchQuery)
+	result := scraper.SearchAnime(searchQuery)
 
-	err := json.NewEncoder(w).Encode("")
+	err := json.NewEncoder(w).Encode(result)
 	if err != nil {
-		http.Error(w, "Failed to encode movies", http.StatusInternalServerError)
+		http.Error(w, "Failed to encode anime search results", http.StatusInternalServerError)
 		return
 	}
 
