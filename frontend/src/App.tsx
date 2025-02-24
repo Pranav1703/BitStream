@@ -6,6 +6,10 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import axios from 'axios'
+import Movies from './pages/Movies'
+import Anime from './pages/Anime'
+import MyList from './pages/MyList'
+import Header from './components/Header'
 
 type userContext = {
   user: string
@@ -39,14 +43,19 @@ function App() {
     <>
     <UserContext.Provider value={{user,setUser}}>
       <Router>
+      {user? <Header/> : null}
         <Routes>
           {
             user?(
               <>
-                <Route path='/' element={<Home/>} />
-                <Route path='/player' element={<Player/>}/>
-                <Route path="*" element={<Navigate to="/" />} />
-
+                  <Route path='/' element={<Home/>} />
+                  <Route path='/player' element={<Player/>}/>
+                  <Route path='/movies' element={<Movies/>}/>
+                  <Route path='/anime' element={<Anime/>} />
+                  <Route path='/mylist' element={<MyList/>} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                
+                
               </>
             ):(
               <>

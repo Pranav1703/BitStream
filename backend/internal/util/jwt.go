@@ -28,7 +28,6 @@ func CreateToken(username string)(string,error){
 }
 
 func VerifyToken(r *http.Request) (string, error) {
-	// Get the token from the cookie
 	cookie, err := r.Cookie("access-token")
 	if err != nil {
 		return "", fmt.Errorf("no cookie found")
@@ -36,7 +35,7 @@ func VerifyToken(r *http.Request) (string, error) {
 
 	// Parse and validate the token
 	tokenString := cookie.Value
-	claims := jwt.MapClaims{}
+	// claims := jwt.MapClaims{}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})

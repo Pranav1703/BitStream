@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@chakra-ui/react"
+import { Box, Button, HStack, Text} from "@chakra-ui/react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { UserContext } from "../App"
@@ -54,6 +54,12 @@ const Header = () => {
       }
     }
 
+    const navItems = [
+      { name: "Movies", path: "/movies" },
+      { name: "Anime", path: "/anime" },
+      { name: "My List", path: "/mylist" },
+    ]
+
   return (
     <Box 
     w={"100%"} 
@@ -68,6 +74,24 @@ const Header = () => {
         <Text fontFamily={"Bungee"} color={"darkturquoise"}>
           BitStream
         </Text>
+        <HStack w={"30%"} justifyContent={"space-around"}>
+          {/* <Text color={{base:"black", _dark:"teal"}} fontWeight={700}>Movies</Text>
+          <Text color={{base:"black", _dark:"teal"}} fontWeight={700}>Anime</Text>
+          <Text color={{base:"black", _dark:"teal"}} fontWeight={700}>My List</Text> */}
+          {navItems.map(({ name, path }) => (
+            <Text
+              key={path}
+              color={location.pathname === path ? "teal.500" : "gray"}
+              fontWeight={location.pathname === path ? "bold" : 500}
+              borderBottom={location.pathname === path ? "2px solid teal" : "none"}
+              cursor="pointer"
+              _hover={{ color: "teal.400" }}
+              onClick={() => navigate(path)}
+            >
+              {name}
+            </Text>
+            ))}
+        </HStack>
         <Box display={"flex"} w={"120px"} justifyContent={"space-around"}>
           <ColorModeButton/>
           <ProfileMenu username={user} logoutHandler={logout}/>
