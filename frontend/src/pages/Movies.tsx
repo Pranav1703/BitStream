@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react"
+import MovieCard from "../components/MovieCard"
 
 
 const Movies = () => {
@@ -9,8 +10,9 @@ const Movies = () => {
     marginRight={"100px"}
     border={"1px solid teal"}
     h={"85vh"}
+    padding={"10px"}
     >
-        Movies
+      <MovieCard/>
     </Box>
   )
 }

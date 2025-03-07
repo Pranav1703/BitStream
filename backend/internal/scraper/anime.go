@@ -3,9 +3,9 @@ package scraper
 import (
 	"fmt"
 	"log"
-	"net/http"
+	// "net/http"
 	"strings"
-	"time"
+	// "time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -21,9 +21,9 @@ func SearchAnime(query string) []AnimeInfo {
 
 	c := colly.NewCollector()
 
-	c.WithTransport(&http.Transport{
-		ResponseHeaderTimeout: 10 * time.Second, // Increase timeout
-	})
+	// c.WithTransport(&http.Transport{
+	// 	ResponseHeaderTimeout: 10 * time.Second, // Increase timeout
+	// })
 
 	var allAnime []AnimeInfo
 	c.OnHTML(".default, .success",func(h *colly.HTMLElement) {
@@ -40,6 +40,11 @@ func SearchAnime(query string) []AnimeInfo {
 
 		allAnime = append(allAnime,*anime)
 	})
+
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Println("error : ",err)
+	})
+
 	fmt.Println(allAnime)
 	query = strings.Join(strings.Split(query, " "), "+")
 	err := c.Visit(fmt.Sprintf("https://nyaa.si/?q=%s",query))

@@ -55,7 +55,7 @@ const Header = () => {
     }
 
     const navItems = [
-      { name: "Movies", path: "/movies" },
+      { name: "Movies", path: "/" },
       { name: "Anime", path: "/anime" },
       { name: "My List", path: "/mylist" },
     ]

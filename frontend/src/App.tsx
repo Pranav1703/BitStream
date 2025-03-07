@@ -48,9 +48,9 @@ function App() {
           {
             user?(
               <>
-                  <Route path='/' element={<Home/>} />
+                  {/* <Route path='/' element={<Home/>} /> */}
                   <Route path='/player' element={<Player/>}/>
-                  <Route path='/movies' element={<Movies/>}/>
+                  <Route path='/' element={<Movies/>}/>
                   <Route path='/anime' element={<Anime/>} />
                   <Route path='/mylist' element={<MyList/>} />
                   <Route path="*" element={<Navigate to="/" />} />
