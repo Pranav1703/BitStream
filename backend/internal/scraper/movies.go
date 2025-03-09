@@ -85,10 +85,6 @@ func ScrapeRecentMovies() []Movie {
 		}) 
 	})
 
-	c.OnResponse(func(r *colly.Response) {
-		fmt.Println("\nGot response from ", r.Request.URL)
-	})
-
 	err := c.Visit(url)
 	if err != nil {
 	 log.Fatal(err)

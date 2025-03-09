@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Text} from "@chakra-ui/react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { UserContext } from "../App"
+import { AppContext } from "../App"
 import { useContext } from "react"
 import {
   MenuContent,
@@ -40,7 +40,7 @@ const ProfileMenu = ({username,logoutHandler}:{username:string,logoutHandler:()=
 
 const Header = () => {
     const navigate = useNavigate()
-    const {user,setUser} = useContext(UserContext)
+    const {user,setUser} = useContext(AppContext)
   
     const logout = async()=>{
       try {

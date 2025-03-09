@@ -6,14 +6,14 @@ import {
 import { Link } from "react-router-dom"
 import { useContext, useState } from "react"
 import axios, { AxiosError } from "axios"
-import { UserContext } from "../App"
+import { AppContext } from "../App"
 
 const Login = () => {
   
   const [username,setUsername] = useState<string>("")
   const [pass,setPass] = useState<string>("")
   const [msg,setMsg] = useState<string>("")
-  const {setUser} = useContext(UserContext)
+  const {setUser} = useContext(AppContext)
 
   const submit = async()=>{
 
@@ -58,8 +58,8 @@ const Login = () => {
         
         >
           <Text fontSize={"x-large"} fontWeight={"bolder"}>Login</Text>
-          <Input placeholder="Enter Username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
-          <PasswordInput placeholder="Enter Password" value={pass} onChange={(e)=>setPass(e.target.value)} variant={"flushed"}/>
+          <Input placeholder="Enter Username" name="username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
+          <PasswordInput placeholder="Enter Password" name="password" value={pass} onChange={(e)=>setPass(e.target.value)} variant={"flushed"}/>
           <PasswordStrengthMeter value={1} w={"100%"}/>
           <Text>
             {msg}

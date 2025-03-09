@@ -2,29 +2,36 @@ import { createContext, useEffect, useState } from 'react'
 import './App.css'
 import Player from './pages/player'
 import {BrowserRouter as Router, Routes,Route, Navigate } from 'react-router-dom'
-import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import axios from 'axios'
-import Movies from './pages/Movies'
+import MoviesPage from './pages/Movies'
 import Anime from './pages/Anime'
 import MyList from './pages/MyList'
 import Header from './components/Header'
+import { Movies } from './components/MovieCard'
 
-type userContext = {
+type AppContext = {
   user: string
   setUser: React.Dispatch<React.SetStateAction<string>>
+  recentMovies: Movies[]
+  setRecentMovies: React.Dispatch<React.SetStateAction<Movies[]>>
 }
 
-export const UserContext = createContext<userContext>({
+export const AppContext = createContext<AppContext>({
   user: "",
-  setUser: ()=>{}
+  setUser: ()=>{},
+  recentMovies: [],
+  setRecentMovies: ()=>{}
 })
 
 
 function App() {
   
   const [user,setUser] = useState<string>("")
+  const [recentMovies,setRecentMovies] = useState<Movies[]>([])
+
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -41,7 +48,7 @@ function App() {
 
   return (
     <>
-    <UserContext.Provider value={{user,setUser}}>
+    <AppContext.Provider value={{user,setUser,recentMovies,setRecentMovies}}>
       <Router>
       {user? <Header/> : null}
         <Routes>
@@ -50,7 +57,7 @@ function App() {
               <>
                   {/* <Route path='/' element={<Home/>} /> */}
                   <Route path='/player' element={<Player/>}/>
-                  <Route path='/' element={<Movies/>}/>
+                  <Route path='/' element={<MoviesPage/>}/>
                   <Route path='/anime' element={<Anime/>} />
                   <Route path='/mylist' element={<MyList/>} />
                   <Route path="*" element={<Navigate to="/" />} />
@@ -70,7 +77,7 @@ function App() {
         </Routes>
         
       </Router>
-    </UserContext.Provider>
+    </AppContext.Provider>
     </>
   )
 }
