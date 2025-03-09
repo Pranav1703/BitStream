@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, HStack } from "@chakra-ui/react"
 import MovieCard from "../components/MovieCard"
 
 
@@ -8,11 +8,28 @@ const Movies = () => {
     marginTop={"50px"}
     marginLeft={"100px"}
     marginRight={"100px"}
-    border={"1px solid teal"}
     h={"85vh"}
-    padding={"10px"}
     >
-      <MovieCard/>
+      <HStack
+      padding={"10px"}
+      w={"100%"}
+      wrap={"wrap"}
+      overflow={"auto"}
+      >
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+        <MovieCard/>
+      </HStack>
+      
     </Box>
   )
 }

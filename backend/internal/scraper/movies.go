@@ -11,7 +11,8 @@ import (
 
 type Magnet struct{
 	Link string
-	Info string
+	Size string
+	Quality string
 }
 
 type Movie struct{
@@ -51,16 +52,21 @@ func ScrapeRecentMovies() []Movie {
 		// fmt.Println("infoArr length: ",len(linkInfos),"\n linksArr length: ",len(magnetLinks))
 		// fmt.Println("--------------")
 
-		for i:=0; i<len(linkInfos); i++{
+		for i:=0; i<len(linkInfos); i++ {
 			magnet := &Magnet{}
-			magnet.Info = linkInfos[i]
+
+			info := linkInfos[i]
+			splitInfo := strings.Split(info," ")
+			
+			magnet.Size = splitInfo[0] + " " + splitInfo[1]
+			magnet.Quality = splitInfo[2]
 			magnet.Link = magnetLinks[i]
 
 			movie.Magnets = append(movie.Magnets, *magnet)
 		}
 		
 		movies = append(movies, *movie)
-		fmt.Println("scraped movie info: ",*movie)
+		
 	})
 
 	c.OnHTML("li", func(e *colly.HTMLElement) {
@@ -128,7 +134,12 @@ func MovieSearchResults(query string) *SearchResults{
 
 		for i:=0; i<len(linkInfos); i++{
 			magnet := &Magnet{}
-			magnet.Info = linkInfos[i]
+			
+			info := linkInfos[i]
+			splitInfo := strings.Split(info," ")
+			
+			magnet.Size = splitInfo[0] + " " + splitInfo[1]
+			magnet.Quality = splitInfo[2]
 			magnet.Link = magnetLinks[i]
 
 			movie.Magnets = append(movie.Magnets, *magnet)
