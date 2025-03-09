@@ -1,4 +1,4 @@
-import { Box, HStack } from "@chakra-ui/react"
+import { Box, HStack, Spinner } from "@chakra-ui/react"
 import MovieCard, { Movies } from "../components/MovieCard"
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
@@ -38,13 +38,36 @@ const MoviesPage = () => {
       <HStack
       padding={"10px"}
       w={"100%"}
+      h={"100%"}
       wrap={"wrap"}
       overflow={"auto"}
       >
         {
-          recentMovies.map((movie,i)=>(
-            <MovieCard key={i}  Title={movie.Title} ImgUrl={movie.ImgUrl} Magnets={movie.Magnets}/>
-          ))
+          recentMovies.length!==0?(
+            <>
+              {
+                recentMovies.map((movie,i)=>(
+                  <MovieCard key={i}  Title={movie.Title} ImgUrl={movie.ImgUrl} Magnets={movie.Magnets}/>
+                ))
+              }
+            </>
+          ):(
+            <>
+              <Box
+              w={"100%"}
+              h={"100%"}
+              maxH={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              paddingBottom={"50px"}
+              >
+                <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/>
+              </Box>
+              
+            </>
+          )
+
         }
         
       </HStack>

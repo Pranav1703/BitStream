@@ -1,5 +1,4 @@
 import { Image, Text, Button, Card } from "@chakra-ui/react"
-import { motion } from "framer-motion";
 import { FaPlay } from "react-icons/fa";    
 
 
@@ -13,8 +12,6 @@ export type Movies = {
   }[]
 }
 
-const MotionText = motion(Card.Title);
-
 const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
 
   return (
@@ -27,14 +24,14 @@ const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
         objectFit={"contain"}
         mt={"15px"}
       />
-      <Card.Body gap="2" bg="gray.800" pt={"10px"}>
+      <Card.Body gap="2" bg="gray.800" pt={"12px"}>
         <Card.Title 
         textAlign={"center"} 
         display={"inline-block"} 
         whiteSpace={"nowrap"}
         overflow={"hidden"}
         textOverflow="ellipsis"
-
+        title={Title}
         >
           {Title}
         </Card.Title>
@@ -45,9 +42,11 @@ const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
         {
           Magnets.map((magnet,i)=>(
             <>
-              <Button key={i} variant="solid" size={"xs"} p={1}>
-                <FaPlay/>
-                <Text ml={"1px"}>{magnet.Quality}</Text>
+              <Button key={i} variant="solid" size={"xs"} p={1} className="play-btn">
+                <span>
+                  <FaPlay/>
+                  <Text ml={"1px"}>{magnet.Quality}</Text>
+                </span>
               </Button>
             </>
           ))

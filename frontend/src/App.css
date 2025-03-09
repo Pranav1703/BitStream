@@ -1,1 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+.play-btn{
+    width: 70px;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: sans-serif;
+    text-decoration: none;
+    color: #333;
+    border: 2px solid #333;
+    letter-spacing: 2px;
+    text-align: center;
+    position: relative;
+    transition: all .35s;
+    border-radius: 5px;
+  }
+  
+  .play-btn span{
+    display: flex;
+    z-index: 2;
+  }
+  
+  .play-btn:after{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #04f4d0;
+    transition: all .35s;
+    border-radius: 5px;
+  }
+  
+  .play-btn:hover{
+    color: #5f5d5d;
+  }
+  
+  .play-btn:hover:after{
+    width: 100%;
+  }

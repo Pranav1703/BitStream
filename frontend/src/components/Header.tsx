@@ -93,7 +93,7 @@ const Header = () => {
             ))}
         </HStack>
         <Box display={"flex"} w={"120px"} justifyContent={"space-around"}>
-          <ColorModeButton/>
+          <ColorModeButton />
           <ProfileMenu username={user} logoutHandler={logout}/>
         </Box>
     </Box>
