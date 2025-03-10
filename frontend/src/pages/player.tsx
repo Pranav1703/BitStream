@@ -1,32 +1,30 @@
-import React, { useState } from "react";
-import ReactPlayer from "react-player";
+  import { useEffect, useState } from "react";
+  import ReactPlayer from "react-player";
+  import { useSearchParams } from "react-router-dom";
 
-const Player = () => {
-  const [magnet, setMagnet] = useState("");
-  const [streamURL, setStreamURL] = useState("");
+  const Player = () => {
 
-  const handleStream = () => {
-    setStreamURL(`http://localhost:3000/stream?magnet=${magnet}`);
+    const [streamURL, setStreamURL] = useState("");
+    const [searchParams] = useSearchParams();
+    const magnet = searchParams.get("magnet");
+
+    useEffect(() => {
+      if (magnet) {
+        setStreamURL(`${import.meta.env.VITE_SERVER}/stream?magnet=${magnet}`);
+      }
+      console.log("magnet link -> ",magnet)
+    }, [magnet]);
+
+    return (
+      <div>
+      
+        {streamURL && (
+          <div style={{ marginTop: "20px" }}>
+            <ReactPlayer url={streamURL} controls width="100%" height="500px" />
+          </div>
+        )}
+      </div>
+    );
   };
 
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter Magnet Link"
-        value={magnet}
-        onChange={(e) => setMagnet(e.target.value)}
-        style={{ width: "300px", marginRight: "10px" }}
-      />
-      <button onClick={handleStream}>Stream Video</button>
-
-      {streamURL && (
-        <div style={{ marginTop: "20px" }}>
-          <ReactPlayer url={streamURL} controls width="100%" height="500px" />
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Player;
+  export default Player;

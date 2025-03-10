@@ -1,5 +1,6 @@
 import { Image, Text, Button, Card } from "@chakra-ui/react"
 import { FaPlay } from "react-icons/fa";    
+import { Link } from "react-router-dom";
 
 
 export type Movies = {
@@ -45,7 +46,9 @@ const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
               <Button key={i} variant="solid" size={"xs"} p={1} className="play-btn">
                 <span>
                   <FaPlay/>
-                  <Text ml={"1px"}>{magnet.Quality}</Text>
+                  <Link to={`/player?magnet=${encodeURIComponent(magnet.Link)}`}>
+                    <Text ml={"1px"}>{magnet.Quality}</Text>
+                  </Link>
                 </span>
               </Button>
             </>
