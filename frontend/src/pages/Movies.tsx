@@ -1,7 +1,7 @@
 import { Box, HStack, Input, Kbd, Spinner, Text } from "@chakra-ui/react"
 import MovieCard from "../components/MovieCard"
 import axios from "axios"
-import { useContext, useEffect, useRef, useState, useMemo } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../App"
 import { Movies } from "../types"
 import { LuSearch } from "react-icons/lu"
@@ -177,8 +177,6 @@ const MoviesPage = () => {
               alignItems={"center"}
               paddingBottom={"50px"}
               >
-                {/* <Text textAlign={""}>{msg}fsdasdfasf</Text>
-                <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/> */}
                 {
                   msg.length!==0?(
                     <Text textAlign={"center"}>{msg}</Text>

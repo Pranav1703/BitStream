@@ -1,4 +1,4 @@
-import { Box, HStack, Input, Kbd, Spinner } from "@chakra-ui/react"
+import { Box, HStack, Input, Kbd, Spinner, Table } from "@chakra-ui/react"
 import axios from "axios"
 import { useContext, useState, useRef, useEffect } from "react"
 import { LuSearch } from "react-icons/lu"
@@ -14,7 +14,7 @@ const AnimePage = () => {
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  const getRecentMovies = async()=>{
+  const searchAnime = async()=>{
     const resp = await axios.get(`${import.meta.env.VITE_SERVER}/anime?s=${searchQuery}`,{
       withCredentials: true
     })
@@ -47,18 +47,31 @@ const AnimePage = () => {
         searchInputFocus()
     })
 
-    if(anime.length===0){
-      getRecentMovies()
-    }else{
-      console.log("anime list already retrieved: ",anime)
-    }
-
     return () => {
       Mousetrap.unbind(['command+/', 'ctrl+/'])
     }
 
   }, [])
   
+  
+const items = [
+  { id: 1, name: "1", category: "Electronics", price: 999.99 },
+  { id: 2, name: "1", category: "Home Appliances", price: 49.99 },
+  { id: 3, name: "1", category: "Furniture", price: 150.0 },
+  { id: 4, name: "1", category: "Electronics", price: 799.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+  { id: 5, name: "1", category: "Accessories", price: 199.99 },
+]
 
   return (
     <Box
@@ -107,15 +120,38 @@ const AnimePage = () => {
       }}
       >
         {
-          anime.length!==0?(
+          anime.length===0?(
             <>
-              {
+              {/* {
                 anime.map((movie,i)=>(
                   <>
                   
                   </>
                 ))
-              }
+              } */}
+
+              <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="100%">
+                <Table.Root size="lg" stickyHeader interactive showColumnBorder>
+                  <Table.Header>
+                    <Table.Row bg="bg.subtle" >
+                      <Table.ColumnHeader textAlign={"center"} w={"3%"}>No.</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"}>Name</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"}>Price</Table.ColumnHeader>
+                    </Table.Row>
+                  </Table.Header>
+                        
+                  <Table.Body>
+                    {items.map((item) => (
+                      <Table.Row key={item.id}>
+                        <Table.Cell>{item.name}</Table.Cell>
+                        <Table.Cell>{item.category}</Table.Cell>
+                        <Table.Cell>{item.price}</Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Root>
+              </Table.ScrollArea>
+
             </>
           ):(
             <>
