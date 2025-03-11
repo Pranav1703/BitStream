@@ -23,7 +23,7 @@ func RegisterRoutes(r *chi.Mux)  {
 	
 	r.Route("/movies",func(r chi.Router) {
 		r.Get("/recent",handler.RecentMovies)
-		r.Get("/search",handler.SearchMovies)
+		r.Get("/",handler.SearchMovies)
 	})
 
 	r.Get("/anime",handler.SearchAnime)

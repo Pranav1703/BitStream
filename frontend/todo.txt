@@ -1,4 +1,4 @@
-scrape movies magnet links
-scrape anime magnet links
+scrape movies magnet links - done
+scrape anime magnet links - done
 
 watchlist

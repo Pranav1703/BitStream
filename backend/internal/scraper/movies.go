@@ -164,7 +164,6 @@ func MovieSearchResults(query string) *SearchResults{
 		log.Fatal(err)
 	}
 	if len(movies)!= 0{
-		sr.Msg = fmt.Sprintf("Search results for '%s'",query)
 		sr.Movies = movies
 	}
 	return sr

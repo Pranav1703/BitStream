@@ -58,7 +58,7 @@ const Login = () => {
         
         >
           <Text fontSize={"x-large"} fontWeight={"bolder"}>Login</Text>
-          <Input placeholder="Enter Username" name="username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
+          <Input placeholder="Enter Username" name="username" autoComplete={"on"} value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
           <PasswordInput placeholder="Enter Password" name="password" value={pass} onChange={(e)=>setPass(e.target.value)} variant={"flushed"}/>
           <PasswordStrengthMeter value={1} w={"100%"}/>
           <Text>

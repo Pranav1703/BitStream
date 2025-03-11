@@ -1,4 +1,4 @@
-import { Box, HStack, Input, Kbd, Spinner } from "@chakra-ui/react"
+import { Box, HStack, Input, Kbd, Spinner, Text } from "@chakra-ui/react"
 import MovieCard from "../components/MovieCard"
 import axios from "axios"
 import { useContext, useEffect, useRef, useState, useMemo } from "react"
@@ -6,11 +6,11 @@ import { AppContext } from "../App"
 import { Movies } from "../types"
 import { LuSearch } from "react-icons/lu"
 import { InputGroup } from "../components/ui/input-group"
-
+import Mousetrap from 'mousetrap'
 
 type SearchResults = {
   Msg: string
-  movies: Movies[]
+  Movies: Movies[]
 }
 
 const MoviesPage = () => {
@@ -18,6 +18,7 @@ const MoviesPage = () => {
   const {recentMovies, setRecentMovies} = useContext(AppContext)
   const [searchQuery,setSearchQuery] = useState<string>("")
   const [searchedMovies, setSearchedMovies] = useState<Movies[]>([])
+  const [msg,setMsg] = useState<string>("")
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,33 +30,73 @@ const MoviesPage = () => {
     const movies:Movies[] = resp.data
     setRecentMovies(movies)
   }
-  let filteredMovies: Movies[] = [];
-  // filteredMovies = useMemo(() => {
+  
+  // const filteredMovies = useMemo(() => {
   //   return recentMovies.filter(movie =>
   //     movie.Title.toLowerCase().includes(searchQuery.toLowerCase())
   //   );
   // }, [searchQuery]);
 
-  const searchShortcut = (event: KeyboardEvent) => {
-    if (event.key === '/' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      searchInputRef.current?.focus();
 
+  const queryMovie = async() =>{
+    try {
+      const resp = await axios.get(`${import.meta.env.VITE_SERVER}/movies?s=${searchQuery}`,
+        {
+          withCredentials: true
+        }
+      )
+      const results: SearchResults = resp.data 
+      console.log("search results: ",results)
+      
+      
+      if(results.Msg.length!==0){
+        setMsg(results.Msg)
+        return
+      }else{
+        setSearchedMovies(results.Movies)
+        return
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const search = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (searchQuery.length > 1) {
+        await queryMovie();
+      } else {
+        alert("Search query length should be greater than 1.");
+      }
     }
   };
+  
 
   useEffect(() => {
     
+    const searchInputFocus = ()=>{
+      if (searchInputRef.current) {
+        searchInputRef.current.focus()
+      }
+    }
+
+    Mousetrap.bind(['command+/', 'ctrl+/'], (e) => {
+      e.preventDefault() 
+      searchInputFocus()
+    })
+
+
     if(recentMovies.length===0){
       getRecentMovies()
     }else{
       console.log("recent movies already retrieved: ",recentMovies)
     }
 
-    window.addEventListener('keydown', searchShortcut);
 
     return () => {
-      window.removeEventListener('keydown', searchShortcut);
+      Mousetrap.unbind(['command+/', 'ctrl+/'])
     }
 
   }, [])
@@ -66,7 +107,7 @@ const MoviesPage = () => {
     marginTop={"15px"}
     marginLeft={"100px"}
     marginRight={"100px"}
-    h={"85vh"}
+    h={"83vh"}
     >
        <HStack width="full" justifyContent={"center"}>
         <InputGroup
@@ -77,10 +118,13 @@ const MoviesPage = () => {
                 w={"550px"} 
                 ref={searchInputRef} 
                 onChange={(e)=>setSearchQuery(e.target.value)}
+                borderWidth={"2px"}
+                onKeyDown={search}
+                name="search-movies"
           />
         </InputGroup>
        </HStack>
-
+      
       <HStack
       padding={"10px"}
       w={"100%"}
@@ -133,7 +177,15 @@ const MoviesPage = () => {
               alignItems={"center"}
               paddingBottom={"50px"}
               >
-                <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/>
+                {/* <Text textAlign={""}>{msg}fsdasdfasf</Text>
+                <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/> */}
+                {
+                  msg.length!==0?(
+                    <Text textAlign={"center"}>{msg}</Text>
+                  ):(
+                    <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/>
+                  )
+                }
               </Box>
               
             </>

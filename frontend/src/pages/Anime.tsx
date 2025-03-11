@@ -5,6 +5,7 @@ import { LuSearch } from "react-icons/lu"
 import { AppContext } from "../App"
 import { InputGroup } from "../components/ui/input-group"
 import { Anime } from "../types"
+import Mousetrap from "mousetrap"
 
 const AnimePage = () => {
   const {anime, setAnime} = useContext(AppContext)
@@ -22,27 +23,39 @@ const AnimePage = () => {
     setAnime(data)
   }
 
+  
+  const search = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (searchQuery.length > 1) {
+        
+      } else {
+        alert("Search query length should be greater than 1.");
+      }
+    }
+  };
 
   useEffect(() => {
-      const searchShortcut = (event: KeyboardEvent) => {
-
-    if (event.key === '/' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      searchInputRef.current?.focus();
-
+    const searchInputFocus = ()=>{
+      if (searchInputRef.current) {
+        searchInputRef.current.focus()
+      }
     }
 
-  };
+    Mousetrap.bind(['command+/', 'ctrl+/'], (e) => {
+        e.preventDefault() 
+        searchInputFocus()
+    })
 
     if(anime.length===0){
       getRecentMovies()
     }else{
-      console.log("recent movies already retrieved: ",anime)
+      console.log("anime list already retrieved: ",anime)
     }
 
-    window.addEventListener('keydown', searchShortcut);
-
-    return () => window.removeEventListener('keydown', searchShortcut);
+    return () => {
+      Mousetrap.unbind(['command+/', 'ctrl+/'])
+    }
 
   }, [])
   
@@ -63,6 +76,9 @@ const AnimePage = () => {
                 w={"550px"} 
                 ref={searchInputRef} 
                 onChange={(e)=>setSearchQuery(e.target.value)}
+                borderWidth={"2px"}
+                onKeyDown={search}
+                name="search-anime"
           />
         </InputGroup>
        </HStack>

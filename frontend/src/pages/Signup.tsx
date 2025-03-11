@@ -59,8 +59,8 @@ const Signup = () => {
         
         >
             <Text fontSize={"x-large"} fontWeight={"bolder"} borderBottom={"2px solid white"} >Sign Up</Text>
-            <Input placeholder="Enter Username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
-            <PasswordInput placeholder="Enter Password" value={p1} onChange={(e)=>setP1(e.target.value)} variant={"flushed"}/>
+            <Input placeholder="Enter Username" name="username" value={username} onChange={(e)=>setUsername(e.target.value)} w={"350px"} variant={"flushed"}/>
+            <PasswordInput placeholder="Enter Password" name="password" value={p1} onChange={(e)=>setP1(e.target.value)} variant={"flushed"}/>
             <PasswordStrengthMeter value={1} w={"100%"}/>
             <PasswordInput placeholder="Confirm Password" value={p2} onChange={(e)=>setP2(e.target.value)} variant={"flushed"}/>
             <Text>

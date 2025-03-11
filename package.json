@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "mousetrap": "^1.6.5"
+  },
+  "devDependencies": {
+    "@types/mousetrap": "^1.6.15"
+  }
+}
