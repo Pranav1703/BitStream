@@ -1,17 +1,8 @@
 import { Image, Text, Button, Card } from "@chakra-ui/react"
 import { FaPlay } from "react-icons/fa";    
 import { Link } from "react-router-dom";
+import { Movies } from "../types";
 
-
-export type Movies = {
-  Title: string
-  ImgUrl : string
-  Magnets : {
-    Link: string
-    Size: string
-    Quality: string
-  }[]
-}
 
 const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
 

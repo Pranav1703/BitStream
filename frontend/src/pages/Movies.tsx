@@ -1,8 +1,12 @@
-import { Box, HStack, Spinner } from "@chakra-ui/react"
-import MovieCard, { Movies } from "../components/MovieCard"
+import { Box, HStack, Input, Kbd, Spinner } from "@chakra-ui/react"
+import MovieCard from "../components/MovieCard"
 import axios from "axios"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState, useMemo } from "react"
 import { AppContext } from "../App"
+import { Movies } from "../types"
+import { LuSearch } from "react-icons/lu"
+import { InputGroup } from "../components/ui/input-group"
+
 
 type SearchResults = {
   Msg: string
@@ -12,16 +16,33 @@ type SearchResults = {
 const MoviesPage = () => {
 
   const {recentMovies, setRecentMovies} = useContext(AppContext)
-  const {} = useState<Movies[]>([])
+  const [searchQuery,setSearchQuery] = useState<string>("")
+  const [searchedMovies, setSearchedMovies] = useState<Movies[]>([])
+
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const getRecentMovies = async()=>{
     const resp = await axios.get(`${import.meta.env.VITE_SERVER}/movies/recent`,{
       withCredentials: true
     })
-    console.log(resp)
+    
     const movies:Movies[] = resp.data
     setRecentMovies(movies)
   }
+  let filteredMovies: Movies[] = [];
+  // filteredMovies = useMemo(() => {
+  //   return recentMovies.filter(movie =>
+  //     movie.Title.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
+  // }, [searchQuery]);
+
+  const searchShortcut = (event: KeyboardEvent) => {
+    if (event.key === '/' && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault();
+      searchInputRef.current?.focus();
+
+    }
+  };
 
   useEffect(() => {
     
@@ -31,16 +52,35 @@ const MoviesPage = () => {
       console.log("recent movies already retrieved: ",recentMovies)
     }
 
+    window.addEventListener('keydown', searchShortcut);
+
+    return () => {
+      window.removeEventListener('keydown', searchShortcut);
+    }
+
   }, [])
   
 
   return (
     <Box
-    marginTop={"50px"}
+    marginTop={"15px"}
     marginLeft={"100px"}
     marginRight={"100px"}
     h={"85vh"}
     >
+       <HStack width="full" justifyContent={"center"}>
+        <InputGroup
+          startElement={<LuSearch />}
+          endElement={<Kbd>ctrl+/</Kbd>}
+        >
+          <Input placeholder="Search movies" 
+                w={"550px"} 
+                ref={searchInputRef} 
+                onChange={(e)=>setSearchQuery(e.target.value)}
+          />
+        </InputGroup>
+       </HStack>
+
       <HStack
       padding={"10px"}
       w={"100%"}
@@ -65,7 +105,16 @@ const MoviesPage = () => {
       }}
       >
         {
-          recentMovies.length!==0?(
+          
+          searchedMovies.length!==0?(
+            <>
+              {
+                searchedMovies.map((movie,i)=>(
+                  <MovieCard key={i}  Title={movie.Title} ImgUrl={movie.ImgUrl} Magnets={movie.Magnets}/>
+                ))
+              }
+            </>
+          ):recentMovies.length!==0 && searchQuery.length===0 ?(
             <>
               {
                 recentMovies.map((movie,i)=>(

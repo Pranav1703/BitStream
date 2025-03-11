@@ -6,23 +6,29 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import axios from 'axios'
 import MoviesPage from './pages/Movies'
-import Anime from './pages/Anime'
+import AnimePage from './pages/Anime'
 import MyList from './pages/MyList'
 import Header from './components/Header'
-import { Movies } from './components/MovieCard'
+import { Movies,Anime } from './types'
 
 type AppContext = {
   user: string
   setUser: React.Dispatch<React.SetStateAction<string>>
   recentMovies: Movies[]
   setRecentMovies: React.Dispatch<React.SetStateAction<Movies[]>>
+  anime: Anime[]
+  setAnime: React.Dispatch<React.SetStateAction<Anime[]>>
+  
 }
 
 export const AppContext = createContext<AppContext>({
   user: "",
   setUser: ()=>{},
   recentMovies: [],
-  setRecentMovies: ()=>{}
+  setRecentMovies: ()=>{},
+  anime: [],
+  setAnime: ()=>{}
+  
 })
 
 
@@ -30,6 +36,7 @@ function App() {
   
   const [user,setUser] = useState<string>("")
   const [recentMovies,setRecentMovies] = useState<Movies[]>([])
+  const [anime,setAnime] = useState<Anime[]>([])
 
 
   useEffect(() => {
@@ -48,7 +55,7 @@ function App() {
 
   return (
     <>
-    <AppContext.Provider value={{user,setUser,recentMovies,setRecentMovies}}>
+    <AppContext.Provider value={{user,setUser,recentMovies,setRecentMovies,anime,setAnime}}>
       <Router>
       {user? <Header/> : null}
         <Routes>
@@ -58,7 +65,7 @@ function App() {
                   {/* <Route path='/' element={<Home/>} /> */}
                   <Route path='/player' element={<Player/>}/>
                   <Route path='/' element={<MoviesPage/>}/>
-                  <Route path='/anime' element={<Anime/>} />
+                  <Route path='/anime' element={<AnimePage/>} />
                   <Route path='/mylist' element={<MyList/>} />
                   <Route path="*" element={<Navigate to="/" />} />
                 
