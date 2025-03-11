@@ -150,7 +150,7 @@ const MoviesPage = () => {
       >
         {
           
-          searchedMovies.length!==0?(
+          searchedMovies.length!==0 && searchQuery.length!==0?(
             <>
               {
                 searchedMovies.map((movie,i)=>(
