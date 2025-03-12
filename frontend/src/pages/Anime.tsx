@@ -1,11 +1,13 @@
-import { Box, HStack, Input, Kbd, Spinner, Table } from "@chakra-ui/react"
+import { Box, HStack, Input, Kbd, Spinner, Table, Button, Text } from "@chakra-ui/react"
 import axios from "axios"
 import { useContext, useState, useRef, useEffect } from "react"
 import { LuSearch } from "react-icons/lu"
 import { AppContext } from "../App"
 import { InputGroup } from "../components/ui/input-group"
 import { Anime } from "../types"
+import { FaPlay } from "react-icons/fa";   
 import Mousetrap from "mousetrap"
+import { Link } from "react-router-dom"
 
 const AnimePage = () => {
   const {anime, setAnime} = useContext(AppContext)
@@ -28,7 +30,7 @@ const AnimePage = () => {
     if (event.key === "Enter") {
       event.preventDefault();
       if (searchQuery.length > 1) {
-        
+        searchAnime()
       } else {
         alert("Search query length should be greater than 1.");
       }
@@ -54,24 +56,24 @@ const AnimePage = () => {
   }, [])
   
   
-const items = [
-  { id: 1, name: "1", category: "Electronics", price: 999.99 },
-  { id: 2, name: "1", category: "Home Appliances", price: 49.99 },
-  { id: 3, name: "1", category: "Furniture", price: 150.0 },
-  { id: 4, name: "1", category: "Electronics", price: 799.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-  { id: 5, name: "1", category: "Accessories", price: 199.99 },
-]
+// const items = [
+//   { id: 1, name: "1", category: "Electronics", price: 999.99 },
+//   { id: 2, name: "1", category: "Home Appliances", price: 49.99 },
+//   { id: 3, name: "1", category: "Furniture", price: 150.0 },
+//   { id: 4, name: "1", category: "Electronics", price: 799.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
+// ]
 
   return (
     <Box
@@ -120,33 +122,35 @@ const items = [
       }}
       >
         {
-          anime.length===0?(
+          anime.length!==0?(
             <>
-              {/* {
-                anime.map((movie,i)=>(
-                  <>
-                  
-                  </>
-                ))
-              } */}
-
               <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="100%">
                 <Table.Root size="lg" stickyHeader interactive showColumnBorder>
                   <Table.Header>
                     <Table.Row bg="bg.subtle" >
                       <Table.ColumnHeader textAlign={"center"} w={"3%"}>No.</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign={"center"}>Name</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign={"center"}>Price</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={"50%"} maxW={"50%"}>Name</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={""}>Size</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={""}>Seeders</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={"1%"}></Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
                         
                   <Table.Body>
-                    {items.map((item) => (
-                      <Table.Row key={item.id}>
-                        <Table.Cell>{item.name}</Table.Cell>
-                        <Table.Cell>{item.category}</Table.Cell>
-                        <Table.Cell>{item.price}</Table.Cell>
-                      </Table.Row>
+                    {anime.map((a,i) => (
+                      <Table.Row key={i}>
+                        <Table.Cell>{i+1}</Table.Cell>
+                        <Table.Cell wordWrap={"break-word"} width={"50%"} maxW={"50%"}>{a.Name}</Table.Cell>
+                        <Table.Cell>{a.Size}</Table.Cell>
+                        <Table.Cell textAlign={"center"}>{a.Seeders}</Table.Cell>
+                        <Table.Cell>
+                          <Button size={"xs"}>
+                            <Link to={`/player?magnet=${encodeURIComponent(a.MagnetLink)}`}>
+                              <FaPlay/>Stream
+                            </Link>
+                          </Button>
+                          </Table.Cell>
+                        </Table.Row>
                     ))}
                   </Table.Body>
                 </Table.Root>
@@ -164,7 +168,15 @@ const items = [
               alignItems={"center"}
               paddingBottom={"50px"}
               >
-                <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/>
+                {
+                  searchQuery.length===0?(
+                    <Text fontSize={"lg"} color={"turquoise"}>
+                      Turn on VPN to search for anime.
+                    </Text>
+                  ):(
+                    <Spinner size="xl" _dark={{color:"darkturquoise"}} _light={{color: "grey"}}/>
+                  )
+                }
               </Box>
               
             </>
