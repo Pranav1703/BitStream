@@ -121,11 +121,11 @@ const AnimePage = () => {
                     {anime.map((a,i) => (
                       <Table.Row key={i}>
                         <Table.Cell textAlign={"center"}>{i+1}</Table.Cell>
-                        <Table.Cell whiteSpace={"normal"}>{a.Name}</Table.Cell>
-                        <Table.Cell textAlign={"center"}>{a.Size}</Table.Cell>
-                        <Table.Cell textAlign={"center"}>{a.Seeders}</Table.Cell>
+                        <Table.Cell whiteSpace={"normal"}>{a.name}</Table.Cell>
+                        <Table.Cell textAlign={"center"}>{a.size}</Table.Cell>
+                        <Table.Cell textAlign={"center"}>{a.seeders}</Table.Cell>
                         <Table.Cell>
-                          <Link to={`/player?magnet=${encodeURIComponent(a.MagnetLink)}`}>
+                          <Link to={`/player?magnet=${encodeURIComponent(a.magnetLink)}`}>
                             <Button size={"xs"}>
                               <FaPlay/>Stream
                             </Button>

@@ -1,16 +1,16 @@
 export type Movies = {
-  Title: string
-  ImgUrl : string
-  Magnets : {
-    Link: string
-    Size: string
-    Quality: string
+  title: string
+  imgUrl : string
+  magnets : {
+    link: string
+    size: string
+    quality: string
   }[]
 }
 
 export type Anime = {
-  Name: string
-	MagnetLink: string
-	Size: string
-	Seeders: string
+  name: string
+	magnetLink: string
+	size: string
+	seeders: string
 }

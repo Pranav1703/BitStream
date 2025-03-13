@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Movies } from "../types";
 
 
-const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
+const MovieCard = ({title: Title,imgUrl: ImgUrl,magnets: Magnets}:Movies) => {
 
   return (
 
@@ -37,8 +37,8 @@ const MovieCard = ({Title,ImgUrl,Magnets}:Movies) => {
               <Button key={i} variant="solid" size={"xs"} p={1} className="play-btn">
                 <span>
                   <FaPlay/>
-                  <Link to={`/player?magnet=${encodeURIComponent(magnet.Link)}`}>
-                    <Text ml={"1px"}>{magnet.Quality}</Text>
+                  <Link to={`/player?magnet=${encodeURIComponent(magnet.link)}`}>
+                    <Text ml={"1px"}>{magnet.quality}</Text>
                   </Link>
                 </span>
               </Button>

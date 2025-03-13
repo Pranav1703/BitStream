@@ -9,21 +9,21 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-type Magnet struct{
-	Link string
-	Size string
-	Quality string
+type Magnet struct {
+	Link    string `json:"link"`
+	Size    string `json:"size"`
+	Quality string `json:"quality"`
 }
 
-type Movie struct{
-	Title string
-	ImgUrl string
-	Magnets []Magnet
+type Movie struct {
+	Title   string   `json:"title"`
+	ImgUrl  string   `json:"imgUrl"`
+	Magnets []Magnet `json:"magnets"`
 }
 
 type SearchResults struct {
-	Msg string
-	Movies []Movie
+	Msg    string  `json:"msg"`
+	Movies []Movie `json:"movies"`
 }
 
 

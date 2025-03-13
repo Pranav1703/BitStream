@@ -16,7 +16,7 @@ import (
 )
 
 type ReqBody struct {
-	Magnet string
+	Magnet string `json:"magnet"`
 }
 
 var upgrader = websocket.Upgrader{
@@ -153,11 +153,12 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-	fmt.Println("body: ",)
 	c, _ := torrent.NewClient(nil)
 	defer c.Close()
 	t, _ := c.AddMagnet(rBody.Magnet)
 	<-t.GotInfo()
-	fmt.Printf("info --> %v",t.Info())
+	fmt.Printf("info --> %v",t.Info().Name)
+	fmt.Printf("info --> %v",t.Info().TotalLength())
+	fmt.Printf("info --> %v",t.Info().Source)
 
 }

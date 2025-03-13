@@ -9,8 +9,8 @@ import { InputGroup } from "../components/ui/input-group"
 import Mousetrap from 'mousetrap'
 
 type SearchResults = {
-  Msg: string
-  Movies: Movies[]
+  msg: string
+  movies: Movies[]
 }
 
 const MoviesPage = () => {
@@ -49,11 +49,11 @@ const MoviesPage = () => {
       console.log("search results: ",results)
       
       
-      if(results.Msg.length!==0){
-        setMsg(results.Msg)
+      if(results.msg.length!==0){
+        setMsg(results.msg)
         return
       }else{
-        setSearchedMovies(results.Movies)
+        setSearchedMovies(results.movies)
         return
       }
 
@@ -154,7 +154,7 @@ const MoviesPage = () => {
             <>
               {
                 searchedMovies.map((movie,i)=>(
-                  <MovieCard key={i}  Title={movie.Title} ImgUrl={movie.ImgUrl} Magnets={movie.Magnets}/>
+                  <MovieCard key={i}  title={movie.title} imgUrl={movie.imgUrl} magnets={movie.magnets}/>
                 ))
               }
             </>
@@ -162,7 +162,7 @@ const MoviesPage = () => {
             <>
               {
                 recentMovies.map((movie,i)=>(
-                  <MovieCard key={i}  Title={movie.Title} ImgUrl={movie.ImgUrl} Magnets={movie.Magnets}/>
+                  <MovieCard key={i}  title={movie.title} imgUrl={movie.imgUrl} magnets={movie.magnets}/>
                 ))
               }
             </>

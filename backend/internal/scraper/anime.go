@@ -11,10 +11,10 @@ import (
 )
 
 type AnimeInfo struct{
-	Name string
-	MagnetLink string
-	Size string
-	Seeders string
+	Name string `json:"name"`
+	MagnetLink string `json:"magnetLink"`
+	Size string `json:"size"`
+	Seeders string `json:"seeders"`
 }
 
 func SearchAnime(query string) []AnimeInfo {
