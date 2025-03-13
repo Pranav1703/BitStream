@@ -1,4 +1,5 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Button, Group, Input, InputAddon } from "@chakra-ui/react"
+
 
 const MyList = () => {
   return (
@@ -8,8 +9,19 @@ const MyList = () => {
         marginRight={"100px"}
         border={"1px solid teal"}
         h={"85vh"}
+    >
+      <Group attached>
+        <Input placeholder="Add magnet link" 
+              w={"550px"}
+              borderWidth={"2px"}
+              name="search-anime"
+        />
+        <InputAddon
+        onClick={()=>{}}
         >
-            Movies
+            Add
+        </InputAddon>
+      </Group>
     </Box>
   )
 }

@@ -55,25 +55,6 @@ const AnimePage = () => {
 
   }, [])
   
-  
-// const items = [
-//   { id: 1, name: "1", category: "Electronics", price: 999.99 },
-//   { id: 2, name: "1", category: "Home Appliances", price: 49.99 },
-//   { id: 3, name: "1", category: "Furniture", price: 150.0 },
-//   { id: 4, name: "1", category: "Electronics", price: 799.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-//   { id: 5, name: "1", category: "Accessories", price: 199.99 },
-// ]
 
   return (
     <Box
@@ -128,27 +109,27 @@ const AnimePage = () => {
                 <Table.Root size="lg" stickyHeader interactive showColumnBorder>
                   <Table.Header>
                     <Table.Row bg="bg.subtle" >
-                      <Table.ColumnHeader textAlign={"center"} w={"3%"}>No.</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign={"center"} w={"50%"} maxW={"50%"}>Name</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={"2%"}>No.</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={"74%"}>Name</Table.ColumnHeader>
                       <Table.ColumnHeader textAlign={"center"} w={""}>Size</Table.ColumnHeader>
                       <Table.ColumnHeader textAlign={"center"} w={""}>Seeders</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign={"center"} w={"1%"}></Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign={"center"} w={"5%"}></Table.ColumnHeader>
                     </Table.Row>
                   </Table.Header>
                         
                   <Table.Body>
                     {anime.map((a,i) => (
                       <Table.Row key={i}>
-                        <Table.Cell>{i+1}</Table.Cell>
-                        <Table.Cell wordWrap={"break-word"} width={"50%"} maxW={"50%"}>{a.Name}</Table.Cell>
-                        <Table.Cell>{a.Size}</Table.Cell>
+                        <Table.Cell textAlign={"center"}>{i+1}</Table.Cell>
+                        <Table.Cell whiteSpace={"normal"}>{a.Name}</Table.Cell>
+                        <Table.Cell textAlign={"center"}>{a.Size}</Table.Cell>
                         <Table.Cell textAlign={"center"}>{a.Seeders}</Table.Cell>
                         <Table.Cell>
-                          <Button size={"xs"}>
-                            <Link to={`/player?magnet=${encodeURIComponent(a.MagnetLink)}`}>
+                          <Link to={`/player?magnet=${encodeURIComponent(a.MagnetLink)}`}>
+                            <Button size={"xs"}>
                               <FaPlay/>Stream
-                            </Link>
-                          </Button>
+                            </Button>
+                          </Link>
                           </Table.Cell>
                         </Table.Row>
                     ))}

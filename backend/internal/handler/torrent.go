@@ -2,6 +2,7 @@ package handler
 
 import (
 	"BitStream/internal/util"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -14,24 +15,26 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type ReqBody struct {
+	Magnet string
+}
 
 var upgrader = websocket.Upgrader{
-    ReadBufferSize:  2048,
-    WriteBufferSize: 2048,
-	CheckOrigin: func(r *http.Request) bool { return true },
+	ReadBufferSize:  2048,
+	WriteBufferSize: 2048,
+	CheckOrigin:     func(r *http.Request) bool { return true },
 	// CheckOrigin: func(r *http.Request) bool {
 	// 	return r.Header.Get("Origin") == "https://yourfrontend.com"
 	// }
 }
 
-
-func TorrentProgress(w http.ResponseWriter,r *http.Request){
-	conn, err := upgrader.Upgrade(w,r,nil)
+func TorrentProgress(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Printf("failed to upgrade connection")
-		return 
+		return
 	}
-	var progress int = 0;
+	var progress int = 0
 	for {
 		progress += rand.Intn(10)
 		err := conn.WriteJSON(map[string]any{"progress": progress})
@@ -48,7 +51,7 @@ func TorrentProgress(w http.ResponseWriter,r *http.Request){
 
 }
 
-func StreamVideo(w http.ResponseWriter,r *http.Request){
+func StreamVideo(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
 	// fmt.Println("Params: ",params.Get("magnet"))
 	magnet := params.Get("magnet")
@@ -58,7 +61,7 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 		return
 	}
 
-	// // random ahh magnet link 
+	// // random ahh magnet link
 	// var _ string = "magnet:?xt=urn:btih:e9eb2ff4fff3db37e617d331153c75d2bc87c497&dn=The.Rookie.S07E04.HDTV.x264-TORRENTGALAXY&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.birkenwald.de%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.moeking.me%3A6969%2Fannounce&tr=udp%3A%2F%2Fipv4.tracker.harry.lu%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce"
 
 	// //solo leveling s02 ep
@@ -67,8 +70,8 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 	var t *torrent.Torrent
 	torrentHash := util.ExtractHashFromMagnet(magnet)
 
-	fmt.Println("Current torrent: ",util.Client.Torrents())
-	for _, existingT := range util.Client.Torrents() {
+	fmt.Println("Current torrent: ", util.TClient.Torrents())
+	for _, existingT := range util.TClient.Torrents() {
 		if existingT.InfoHash().HexString() == torrentHash {
 			t = existingT
 			break
@@ -78,7 +81,7 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 	// If the torrent is not already added, add it
 	if t == nil {
 		var err error
-		t, err = util.Client.AddMagnet(magnet)
+		t, err = util.TClient.AddMagnet(magnet)
 		if err != nil {
 			http.Error(w, "Failed to add torrent", http.StatusInternalServerError)
 			return
@@ -107,14 +110,14 @@ func StreamVideo(w http.ResponseWriter,r *http.Request){
 		downloaded := videoFile.BytesCompleted()
 		totalSize := videoFile.Length()
 		if downloaded >= (videoFile.Length() / 20) {
-			break 
+			break
 		}
 		log.Printf(" %d/%d bytes. downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
 		time.Sleep(2 * time.Second)
 	}
 
 	util.MonitorTorrent(videoFile.Torrent())
-	
+
 	reader := videoFile.NewReader()
 	defer reader.Close()
 
@@ -137,4 +140,24 @@ func isVideoFile(filename string) bool {
 		}
 	}
 	return false
+}
+
+func AddMagnet(w http.ResponseWriter, r *http.Request) {
+
+	var rBody ReqBody
+
+	err := json.NewDecoder(r.Body).Decode(&rBody)
+	fmt.Println(rBody)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+	fmt.Println("body: ",)
+	c, _ := torrent.NewClient(nil)
+	defer c.Close()
+	t, _ := c.AddMagnet(rBody.Magnet)
+	<-t.GotInfo()
+	fmt.Printf("info --> %v",t.Info())
+
 }

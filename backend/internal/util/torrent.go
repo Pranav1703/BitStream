@@ -11,59 +11,60 @@ import (
 	"github.com/anacrolix/torrent"
 )
 
-var Client *torrent.Client
+var TClient *torrent.Client
+
 // type TorrentClient struct {
 //     Client *torrent.Client
 //     CurrentTor sync.Map
 // }
 
-func InitTorrentClient() (error) {
-	if Client != nil {
+func InitTorrentClient() error {
+	if TClient != nil {
 		return nil // Client is already initialized
 	}
 
 	cfg := torrent.NewDefaultClientConfig()
 	cfg.DataDir = "./downloads"
 
-    var err error
-	Client, err = torrent.NewClient(cfg)
+	var err error
+	TClient, err = torrent.NewClient(cfg)
 	if err != nil {
 		return fmt.Errorf("failed to initialize torrent client: %w", err)
 	}
 	return nil
 }
 
-func CloseClient(){
-    Client.Close()
+func CloseClient() {
+	TClient.Close()
 }
 
 var torrentProgress = sync.Map{} // Global map to track torrent progress
 
 func MonitorTorrent(t *torrent.Torrent) {
-    torrentHash := t.InfoHash().HexString()
+	torrentHash := t.InfoHash().HexString()
 	name := t.Name()
-    if _, exists := torrentProgress.Load(torrentHash); exists {
-        return 
-    }
+	if _, exists := torrentProgress.Load(torrentHash); exists {
+		return
+	}
 
-    torrentProgress.Store(torrentHash, true) // Mark as monitored
+	torrentProgress.Store(torrentHash, true) // Mark as monitored
 
-    go func() {
-        defer torrentProgress.Delete(torrentHash) // Cleanup after completion
-        for {
-            downloaded := t.BytesCompleted()
-            totalSize := t.Length()
+	go func() {
+		defer torrentProgress.Delete(torrentHash) // Cleanup after completion
+		for {
+			downloaded := t.BytesCompleted()
+			totalSize := t.Length()
 
-            if downloaded >= totalSize {
-                log.Println("Download complete for:", name)
-                return 
-            }
+			if downloaded >= totalSize {
+				log.Println("Download complete for:", name)
+				return
+			}
 
-            log.Printf("%d/%d bytes downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
+			log.Printf("%d/%d bytes downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
 
-            time.Sleep(2 * time.Second)
-        }
-    }()
+			time.Sleep(2 * time.Second)
+		}
+	}()
 }
 
 func ExtractHashFromMagnet(magnet string) string {
@@ -75,6 +76,6 @@ func ExtractHashFromMagnet(magnet string) string {
 	if strings.HasPrefix(query, "urn:btih:") {
 		return strings.TrimPrefix(query, "urn:btih:")
 	}
-    
+
 	return ""
 }
