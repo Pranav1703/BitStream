@@ -19,6 +19,11 @@ type ReqBody struct {
 	Magnet string `json:"magnet"`
 }
 
+type Magnet struct{
+	Link string
+	Size int
+}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  2048,
 	WriteBufferSize: 2048,
@@ -157,8 +162,14 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 	t, _ := c.AddMagnet(rBody.Magnet)
 	<-t.GotInfo()
-	fmt.Printf("info --> %v",t.Info().Name)
-	fmt.Printf("info --> %v",t.Info().TotalLength())
-	fmt.Printf("info --> %v",t.Info().Source)
+
+	fmt.Printf("info --> %v\n",t.Info().Name)
+	fmt.Printf("info --> %v\n",t.Info().TotalLength())
+	
+	
+	
+}
+
+func GetList(w http.ResponseWriter, r *http.Request){
 
 }
