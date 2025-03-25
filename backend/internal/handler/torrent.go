@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"BitStream/internal/database"
+	"BitStream/internal/database/model"
 	"BitStream/internal/util"
 	"encoding/json"
 	"fmt"
@@ -19,10 +21,6 @@ type ReqBody struct {
 	Magnet string `json:"magnet"`
 }
 
-type Magnet struct{
-	Link string
-	Size int
-}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  2048,
@@ -158,18 +156,46 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+	var user model.User
+	db := database.GetDb()
 	c, _ := torrent.NewClient(nil)
 	defer c.Close()
 	t, _ := c.AddMagnet(rBody.Magnet)
 	<-t.GotInfo()
 
+	username := r.Context().Value("user")
+	fmt.Println("username from context: ",username)
+	result := db.Where("username = ?",username).First(&user)
+	if result.Error!=nil{
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+	}
+
+
+	var magnet model.Magnet
 	fmt.Printf("info --> %v\n",t.Info().Name)
 	fmt.Printf("info --> %v\n",t.Info().TotalLength())
 	
-	
+	magnet.Link = rBody.Magnet
+	magnet.Size = int(t.Info().TotalLength())
+	magnet.Name = t.Info().Name
+	magnet.UserId = user.ID
+
+	if err := db.Create(&magnet).Error; err != nil {
+		http.Error(w,"failed to add magnet.",http.StatusInternalServerError)
+	}
+
 	
 }
 
 func GetList(w http.ResponseWriter, r *http.Request){
+	var user model.User
+	db := database.GetDb()
+	
+	username := r.Context().Value("user")
+	fmt.Println("username from context: ",username)
+	result := db.Where("username = ?",username).First(&user)
+	if result.Error!=nil{
+		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+	}
 
 }

@@ -41,7 +41,7 @@ func InitDb() (error){
 		return err
 	}
 
-	err = Db.AutoMigrate(&model.User{})
+	err = Db.AutoMigrate(&model.User{},&model.Magnet{})
 	if err != nil {
 		return err
 	}
