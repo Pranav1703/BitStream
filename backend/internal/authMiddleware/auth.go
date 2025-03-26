@@ -10,7 +10,7 @@ import (
 
 type contextKey string
 
-const userContextKey contextKey = "user"
+const UserContextKey contextKey = "user"
 
 func AuthenticateToken(next http.Handler) http.Handler{
 	secretKey := util.SecretKey
@@ -22,9 +22,7 @@ func AuthenticateToken(next http.Handler) http.Handler{
 		}
 	
 		tokenString := cookie.Value
-
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// Validate the signing method
+		token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, http.ErrNotSupported
 			}
@@ -34,9 +32,16 @@ func AuthenticateToken(next http.Handler) http.Handler{
 			http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
 			return
 		}
-
+		
+		// Extract claims
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+			return
+		}
+		
 		// Pass the context with the token claims
-		ctx := context.WithValue(r.Context(), userContextKey, token.Claims)
+		ctx := context.WithValue(r.Context(), UserContextKey, claims)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)

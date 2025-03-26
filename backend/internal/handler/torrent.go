@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authmiddleware "BitStream/internal/authMiddleware"
 	"BitStream/internal/database"
 	"BitStream/internal/database/model"
 	"BitStream/internal/util"
@@ -14,6 +15,7 @@ import (
 	"time"
 
 	"github.com/anacrolix/torrent"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/websocket"
 )
 
@@ -150,7 +152,6 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	var rBody ReqBody
 
 	err := json.NewDecoder(r.Body).Decode(&rBody)
-	fmt.Println(rBody)
     if err != nil {
         http.Error(w, err.Error(), http.StatusBadRequest)
         return
@@ -160,11 +161,20 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	db := database.GetDb()
 	c, _ := torrent.NewClient(nil)
 	defer c.Close()
-	t, _ := c.AddMagnet(rBody.Magnet)
+	t, err := c.AddMagnet(rBody.Magnet)
+	if err != nil || t == nil {
+		http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
+		return
+	}
 	<-t.GotInfo()
 
-	username := r.Context().Value("user")
-	fmt.Println("username from context: ",username)
+	claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
+    if !ok {
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+	username := claims["username"].(string)
 	result := db.Where("username = ?",username).First(&user)
 	if result.Error!=nil{
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
@@ -181,9 +191,8 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	magnet.UserId = user.ID
 
 	if err := db.Create(&magnet).Error; err != nil {
-		http.Error(w,"failed to add magnet.",http.StatusInternalServerError)
+		http.Error(w,err.Error(),http.StatusInternalServerError)
 	}
-
 	
 }
 
@@ -191,11 +200,18 @@ func GetList(w http.ResponseWriter, r *http.Request){
 	var user model.User
 	db := database.GetDb()
 	
-	username := r.Context().Value("user")
+    claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
+    if !ok {
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+	username := claims["username"].(string)
+
 	fmt.Println("username from context: ",username)
 	result := db.Where("username = ?",username).First(&user)
 	if result.Error!=nil{
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 	}
-
+	fmt.Printf("result: %v\n",user.MagnetList)
 }
