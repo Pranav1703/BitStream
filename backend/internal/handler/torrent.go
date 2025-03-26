@@ -180,7 +180,6 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 	}
 
-
 	var magnet model.Magnet
 	fmt.Printf("info --> %v\n",t.Info().Name)
 	fmt.Printf("info --> %v\n",t.Info().TotalLength())
@@ -193,6 +192,7 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	if err := db.Create(&magnet).Error; err != nil {
 		http.Error(w,err.Error(),http.StatusInternalServerError)
 	}
+	log.Println("new magent added. magnet ID: ",magnet.ID)
 	
 }
 
@@ -205,7 +205,6 @@ func GetList(w http.ResponseWriter, r *http.Request){
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
         return
     }
-
 	username := claims["username"].(string)
 
 	fmt.Println("username from context: ",username)

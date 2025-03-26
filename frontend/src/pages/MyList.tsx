@@ -1,6 +1,6 @@
 import { Box, Button, Group, Input, InputAddon } from "@chakra-ui/react"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 const MyList = () => {
@@ -13,13 +13,26 @@ const MyList = () => {
       },{
         withCredentials:true
       })
-      // await axios.get(`${import.meta.env.VITE_SERVER}/magnet/list`,{
-      //   withCredentials:true
-      // })
+
     } catch (error) {
       console.log(error)
     }
   }
+  
+  const getList = async()=>{
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_SERVER}/magnet/list`,{
+        withCredentials:true
+      })
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getList()
+  }, [])
   
 
   return (
