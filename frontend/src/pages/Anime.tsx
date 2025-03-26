@@ -103,7 +103,7 @@ const AnimePage = () => {
       }}
       >
         {
-          anime.length!==0?(
+          anime && anime.length!==0?(
             <>
               <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="100%">
                 <Table.Root size="lg" stickyHeader interactive showColumnBorder>

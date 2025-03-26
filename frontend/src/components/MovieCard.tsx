@@ -1,4 +1,4 @@
-import { Image, Text, Button, Card } from "@chakra-ui/react"
+import { Image,Box, Text, Button, Card } from "@chakra-ui/react"
 import { FaPlay } from "react-icons/fa";    
 import { Link } from "react-router-dom";
 import { Movies } from "../types";
@@ -33,8 +33,8 @@ const MovieCard = ({title: Title,imgUrl: ImgUrl,magnets: Magnets}:Movies) => {
       <Card.Footer gap="2" maxW={"280px"} display={"flex"} justifyContent={"space-around"}>
         {
           Magnets.map((magnet,i)=>(
-            <>
-              <Button key={i} variant="solid" size={"xs"} p={1} className="play-btn">
+            <Box key={i}>
+              <Button variant="solid" size={"xs"} p={1} className="play-btn">
                 <span>
                   <FaPlay/>
                   <Link to={`/player?magnet=${encodeURIComponent(magnet.link)}`}>
@@ -42,7 +42,7 @@ const MovieCard = ({title: Title,imgUrl: ImgUrl,magnets: Magnets}:Movies) => {
                   </Link>
                 </span>
               </Button>
-            </>
+            </Box>
           ))
         }
       </Card.Footer>
