@@ -14,3 +14,9 @@ export type Anime = {
 	size: string
 	seeders: string
 }
+
+export type MyList = {
+  name: string
+  magnetLink: string
+  size: string
+}
