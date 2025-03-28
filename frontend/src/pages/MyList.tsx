@@ -1,16 +1,19 @@
 import { Box, Button, Group, Input, InputAddon, Table } from "@chakra-ui/react"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import {Link} from "react-router-dom"
 import { FaPlay } from "react-icons/fa"; 
+import { AppContext } from "../App";
 
 const MyList = () => {
 
   const [magnet,setMagnet] = useState("")
-  const [myList,setMyList] = useState([])
+
+  const {userList,setUserList} = useContext(AppContext)
+
   const addMagnet = async()=>{
     try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER}/magnet/add`,{
+      await axios.post(`${import.meta.env.VITE_SERVER}/magnet/add`,{
         magnet: magnet
       },{
         withCredentials:true
@@ -26,13 +29,26 @@ const MyList = () => {
       const res = await axios.get(`${import.meta.env.VITE_SERVER}/magnet/list`,{
         withCredentials:true
       })
-      setMyList(res.data)
+
+      setUserList(res.data)
       console.log(res.data)
     } catch (error) {
       console.log(error)
     }
   }
+
+  useEffect(() => {
   
+    if(userList.length===0){
+      console.log("fetching userList...")
+      getList()
+    }else{
+      console.log("resuing fetched list :",userList);
+    }
+
+  }, [])
+  
+
 
   return (
     <Box
@@ -71,14 +87,14 @@ const MyList = () => {
           </Table.Header>
                 
           <Table.Body>
-            {myList.map((e,i) => (
+            {userList && userList.map((e,i) => (
               <Table.Row key={i}>
                 <Table.Cell textAlign={"center"}>{i+1}</Table.Cell>
-                <Table.Cell whiteSpace={"normal"}>{}</Table.Cell>
-                <Table.Cell textAlign={"center"}>{}</Table.Cell>
+                <Table.Cell whiteSpace={"normal"}>{e.Name}</Table.Cell>
+                <Table.Cell textAlign={"center"}>{e.Size}</Table.Cell>
                 {/* <Table.Cell textAlign={"center"}>{}</Table.Cell> */}
                 <Table.Cell>
-                  <Link to={`/player?magnet=${encodeURIComponent("")}`}>
+                  <Link to={`/player?magnet=${encodeURIComponent(`${e.MagnetLink}`)}`}>
                     <Button size={"xs"}>
                       <FaPlay/>Stream
                     </Button>

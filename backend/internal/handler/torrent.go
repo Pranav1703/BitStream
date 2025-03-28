@@ -22,6 +22,11 @@ import (
 type ReqBody struct {
 	Magnet string `json:"magnet"`
 }
+const (
+	KB = 1024
+	MB = KB * 1024
+	GB = MB * 1024
+)
 
 
 var upgrader = websocket.Upgrader{
@@ -185,7 +190,17 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("info --> %v\n",t.Info().TotalLength())
 	
 	magnet.Link = rBody.Magnet
-	magnet.Size = int(t.Info().TotalLength())
+
+	size := int(t.Info().TotalLength())
+	if size >= GB {
+		magnet.Size = fmt.Sprintf("%.2f GB",float64(size)/float64(GB))
+	}else if size >= MB {
+		magnet.Size = fmt.Sprintf("%.2f MB",float64(size)/float64(MB))
+	}else if size >= KB {
+		magnet.Size = fmt.Sprintf("%.2f KB",float64(size)/float64(KB))
+	}else{
+		magnet.Size = fmt.Sprintf("%d B",size)
+	}
 	magnet.Name = t.Info().Name
 	magnet.UserId = user.ID
 
@@ -207,10 +222,13 @@ func GetList(w http.ResponseWriter, r *http.Request){
     }
 	username := claims["username"].(string)
 
-	fmt.Println("username from context: ",username)
-	result := db.Where("username = ?",username).First(&user)
+	result := db.Preload("MagnetList").Where("username = ?",username).First(&user)
 	if result.Error!=nil{
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
 	}
-	fmt.Printf("result: %v\n",user.MagnetList)
+	err:= json.NewEncoder(w).Encode(user.MagnetList)
+	if err!=nil{
+		http.Error(w, "Failed to encode magnet list.", http.StatusInternalServerError)
+		return
+	}
 }

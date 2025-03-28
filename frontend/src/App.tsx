@@ -7,9 +7,9 @@ import Signup from './pages/Signup'
 import axios from 'axios'
 import MoviesPage from './pages/Movies'
 import AnimePage from './pages/Anime'
-import MyList from './pages/MyList'
 import Header from './components/Header'
-import { Movies,Anime } from './types'
+import { Movies,Anime,UserList } from './types'
+import MyList from './pages/MyList'
 
 type AppContext = {
   user: string
@@ -18,7 +18,8 @@ type AppContext = {
   setRecentMovies: React.Dispatch<React.SetStateAction<Movies[]>>
   anime: Anime[]
   setAnime: React.Dispatch<React.SetStateAction<Anime[]>>
-  
+  userList: UserList[],
+  setUserList: React.Dispatch<React.SetStateAction<UserList[]>>
 }
 
 export const AppContext = createContext<AppContext>({
@@ -27,7 +28,9 @@ export const AppContext = createContext<AppContext>({
   recentMovies: [],
   setRecentMovies: ()=>{},
   anime: [],
-  setAnime: ()=>{}
+  setAnime: ()=>{},
+  userList: [],
+  setUserList: ()=>{}
   
 })
 
@@ -37,7 +40,7 @@ function App() {
   const [user,setUser] = useState<string>("")
   const [recentMovies,setRecentMovies] = useState<Movies[]>([])
   const [anime,setAnime] = useState<Anime[]>([])
-
+  const [userList,setUserList] = useState<UserList[]>([])
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -55,7 +58,7 @@ function App() {
 
   return (
     <>
-    <AppContext.Provider value={{user,setUser,recentMovies,setRecentMovies,anime,setAnime}}>
+    <AppContext.Provider value={{user,setUser,recentMovies,setRecentMovies,anime,setAnime,userList,setUserList}}>
       <Router>
       {user? <Header/> : null}
         <Routes>
