@@ -94,7 +94,7 @@ const MyList = () => {
                 <Table.Cell textAlign={"center"}>{e.Size}</Table.Cell>
                 {/* <Table.Cell textAlign={"center"}>{}</Table.Cell> */}
                 <Table.Cell>
-                  <Link to={`/player?magnet=${encodeURIComponent(`${e.MagnetLink}`)}`}>
+                  <Link to={`/player?magnet=${encodeURIComponent(`${e.Link}`)}`}>
                     <Button size={"xs"}>
                       <FaPlay/>Stream
                     </Button>

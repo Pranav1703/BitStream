@@ -17,6 +17,6 @@ export type Anime = {
 
 export type UserList = {
   Name: string
-  MagnetLink: string
+  Link: string
   Size: string
 }
