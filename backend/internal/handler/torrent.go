@@ -68,6 +68,7 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 
 	if err := util.InitTorrentClient(); err != nil {
 		http.Error(w, "Failed to initialize torrent client.", http.StatusInternalServerError)
+		log.Println("Failed to initialize torrent client.")
 		return
 	}
 
@@ -94,6 +95,7 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		t, err = util.TClient.AddMagnet(magnet)
 		if err != nil {
 			http.Error(w, "Failed to add torrent", http.StatusInternalServerError)
+			log.Println("Failed to add torret.")
 			return
 		}
 		<-t.GotInfo()
@@ -169,6 +171,7 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	t, err := c.AddMagnet(rBody.Magnet)
 	if err != nil || t == nil {
 		http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
+		log.Println("Failed to add magnet link.")
 		return
 	}
 	<-t.GotInfo()
@@ -176,6 +179,7 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
     if !ok {
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		log.Println("Unauthorized request recieved")
         return
     }
 
@@ -206,6 +210,7 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 
 	if err := db.Create(&magnet).Error; err != nil {
 		http.Error(w,err.Error(),http.StatusInternalServerError)
+		log.Println(err.Error())
 	}
 	log.Println("new magent added. magnet ID: ",magnet.ID)
 	
@@ -218,6 +223,7 @@ func GetList(w http.ResponseWriter, r *http.Request){
     claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
     if !ok {
         http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		log.Println("Unauthorized")
         return
     }
 	username := claims["username"].(string)
@@ -225,10 +231,12 @@ func GetList(w http.ResponseWriter, r *http.Request){
 	result := db.Preload("MagnetList").Where("username = ?",username).First(&user)
 	if result.Error!=nil{
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		log.Println(result.Error.Error())
 	}
 	err:= json.NewEncoder(w).Encode(user.MagnetList)
 	if err!=nil{
 		http.Error(w, "Failed to encode magnet list.", http.StatusInternalServerError)
+		log.Println("Failed to encode magnet list.")
 		return
 	}
 }

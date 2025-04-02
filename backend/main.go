@@ -23,6 +23,7 @@ func main() {
 
 	r := chi.NewRouter()
 
+	r.Use(middleware.GetHead)
 	r.Use(middleware.Logger)
 
 	r.Use(cors.Handler(cors.Options{
