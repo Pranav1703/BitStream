@@ -1,4 +1,14 @@
 scrape movies magnet links - done
 scrape anime magnet links - done
 
-watchlist
+watchlist - done
+
+•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+•   implement tests                                                                     •
+*   Testing Plan Overview                                                               •
+•	Functional Testing: Verify user authentication, torrent handling, and streaming.    •
+•	Unit Testing: Test individual components (API routes, database queries, etc.).      •
+•	System Testing: Check integration between frontend and backend.                     •
+•	Tools: Jest, Go test framework, Postman for API testing.                            •
+•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
