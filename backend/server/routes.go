@@ -31,6 +31,7 @@ func RegisterRoutes(r *chi.Mux)  {
 	r.Route("/magnet",func(r chi.Router){
 		r.With(authmiddleware.AuthenticateToken).Post("/add",handler.AddMagnet)
 		r.With(authmiddleware.AuthenticateToken).Get("/list",handler.GetList)
+		r.With(authmiddleware.AuthenticateToken).Post("/delete",handler.DeleteEntry)
 	})
 
 }

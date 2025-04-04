@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react"
 import {Link} from "react-router-dom"
 import { FaPlay } from "react-icons/fa"; 
 import { AppContext } from "../App";
+import { MdDelete } from "react-icons/md";
 
 const MyList = () => {
 
@@ -13,15 +14,17 @@ const MyList = () => {
 
   const addMagnet = async()=>{
     try {
-      await axios.post(`${import.meta.env.VITE_SERVER}/magnet/add`,{
+      const res = await axios.post(`${import.meta.env.VITE_SERVER}/magnet/add`,{
         magnet: magnet
       },{
         withCredentials:true
       })
-
+      console.log("magnet added.",res)
+      await getList()
     } catch (error) {
       console.log(error)
     }
+    
   }
   
   const getList = async()=>{
@@ -37,11 +40,29 @@ const MyList = () => {
     }
   }
 
+  const deleteEntry = async(link:string)=>{
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER}/magnet/delete`,{
+        magnet: link
+      },{
+        withCredentials:true
+      })
+
+      console.log("magnet deleted.",res)
+      await getList()
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
   useEffect(() => {
   
     if(userList.length===0){
-      console.log("fetching userList...")
-      getList()
+      console.log("fetching userList...");
+      (async()=>{
+        await getList()
+      })();
     }else{
       console.log("resuing fetched list :",userList);
     }
@@ -81,8 +102,8 @@ const MyList = () => {
               <Table.ColumnHeader textAlign={"center"} w={"2%"}>No.</Table.ColumnHeader>
               <Table.ColumnHeader textAlign={"center"} w={"74%"}>Name</Table.ColumnHeader>
               <Table.ColumnHeader textAlign={"center"} w={""}>Size</Table.ColumnHeader>
-              {/* <Table.ColumnHeader textAlign={"center"} w={""}>Seeders</Table.ColumnHeader> */}
               <Table.ColumnHeader textAlign={"center"} w={"8%"}></Table.ColumnHeader>
+              <Table.ColumnHeader textAlign={"center"} w={"3%"}></Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
                 
@@ -92,15 +113,20 @@ const MyList = () => {
                 <Table.Cell textAlign={"center"}>{i+1}</Table.Cell>
                 <Table.Cell whiteSpace={"normal"}>{e.Name}</Table.Cell>
                 <Table.Cell textAlign={"center"}>{e.Size}</Table.Cell>
-                {/* <Table.Cell textAlign={"center"}>{}</Table.Cell> */}
+                
                 <Table.Cell>
                   <Link to={`/player?magnet=${encodeURIComponent(`${e.Link}`)}`}>
                     <Button size={"xs"}>
                       <FaPlay/>Stream
                     </Button>
                   </Link>
-                  </Table.Cell>
-                </Table.Row>
+                </Table.Cell>
+                <Table.Cell textAlign={"center"}>
+                  <Button size={"xs"} onClick={()=>deleteEntry(e.Link)}>
+                  <MdDelete/>
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
             ))}
           </Table.Body>
         </Table.Root>
