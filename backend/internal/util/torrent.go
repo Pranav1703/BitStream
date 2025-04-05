@@ -79,3 +79,6 @@ func ExtractHashFromMagnet(magnet string) string {
 
 	return ""
 }
+
+
+//ffmpeg -y -i "input.mkv" -map 0:s:0? "output.vtt" - force overwrites existing subs file 

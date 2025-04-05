@@ -23,7 +23,7 @@ const Player = () => {
         <div style={{ marginTop: "20px" }}>
           <ReactPlayer url={streamURL} 
             controls
-             
+            
             width="80%" 
             height="600px" 
           />

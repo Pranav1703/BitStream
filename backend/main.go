@@ -37,25 +37,7 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	if _, err := os.Stat("./downloads"); err != nil {
-		if os.IsNotExist(err) {
-			if err := os.Mkdir("./downloads", os.ModePerm); err != nil {
-				fmt.Println("Error creating directory:", err)
-			} else {
-				fmt.Println("created a new Dir for downloads")
-			}
-		} else {
-			fmt.Println(err)
-		}
-	} else {
-		dirInfo, err := os.Stat("./downloads")
-
-		if err != nil {
-			fmt.Println("error reading the Dir.", err)
-			return
-		}
-		fmt.Printf("%v directory already exists. perm: %v\n", dirInfo.Name(), dirInfo.Mode())
-	}
+	util.CreateDownloadsDir()
 
 	server.RegisterRoutes(r)
 
@@ -69,7 +51,11 @@ func main() {
 	fmt.Println("connected to DB.")
 
 	go server.StartServer(r)
+	
 	fmt.Println("server started.")
+	log.Println("monitoring 'downloads' dir...")
+
+	go util.MonitorDownloadsDir(closeSignal)
 
 	<-closeSignal
 	if util.TClient != nil {
@@ -81,5 +67,4 @@ func main() {
 
 	database.CloseDb()
 	server.StopServer()
-
 }

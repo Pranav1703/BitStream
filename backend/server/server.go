@@ -20,19 +20,20 @@ func StartServer(r *chi.Mux) {
 		Handler: r,
 	}
 
-	if err:= server.ListenAndServe(); err!=nil{
+	if err:= server.ListenAndServe(); err!=nil && err != http.ErrServerClosed{
 		log.Fatal("Server Error: ",err)
 	}
 }
 
 func StopServer(){
 
-	ctx ,cancel := context.WithTimeout(context.Background(),3*time.Second)
+	ctx ,cancel := context.WithTimeout(context.Background(),500*time.Millisecond)
 	defer cancel()
 
-	if err:=server.Shutdown(ctx);err!=nil{
-		log.Fatal("Serevr shutdown failed: ",err)
+	err := server.Shutdown(ctx)
+	if err != nil {
+		log.Println("Server shutdown failed:", err)
+	} else {
+		fmt.Println("Server Stopped.")
 	}
-	
-	fmt.Println("Server Stopped.")
 }

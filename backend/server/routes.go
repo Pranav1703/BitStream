@@ -22,16 +22,20 @@ func RegisterRoutes(r *chi.Mux)  {
 	r.With(authmiddleware.AuthenticateToken).Get("/stream",handler.StreamVideo)
 	
 	r.Route("/movies",func(r chi.Router) {
+		r.Use(authmiddleware.AuthenticateToken)
+		
 		r.Get("/recent",handler.RecentMovies)
 		r.Get("/",handler.SearchMovies)
 	})
 
-	r.Get("/anime",handler.SearchAnime)
+	r.With(authmiddleware.AuthenticateToken).Get("/anime",handler.SearchAnime)
 
 	r.Route("/magnet",func(r chi.Router){
-		r.With(authmiddleware.AuthenticateToken).Post("/add",handler.AddMagnet)
-		r.With(authmiddleware.AuthenticateToken).Get("/list",handler.GetList)
-		r.With(authmiddleware.AuthenticateToken).Post("/delete",handler.DeleteEntry)
+		r.Use(authmiddleware.AuthenticateToken)
+
+		r.Post("/add",handler.AddMagnet)
+		r.Get("/list",handler.GetList)
+		r.Post("/delete",handler.DeleteEntry)
 	})
 
 }
