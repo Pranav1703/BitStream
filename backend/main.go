@@ -69,4 +69,3 @@ func main() {
 	server.StopServer()
 }
 
-// in main branch
