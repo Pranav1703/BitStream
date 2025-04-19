@@ -80,8 +80,8 @@ const AnimePage = () => {
           </InputGroup>
           <InputAddon
             onClick={searchAnime}
-            fontSize={"2xl"}
-          >
+            cursor={"pointer"}
+          > 
             search
           </InputAddon>
         </Group>
