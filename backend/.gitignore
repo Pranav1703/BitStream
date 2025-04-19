@@ -1,6 +1,6 @@
-.torrent.db
 .env
 downloads/
 .torrent.db
 .torrent.db-wal
 .torrent.db-shm
+info.txt
