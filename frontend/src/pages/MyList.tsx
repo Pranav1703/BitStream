@@ -76,7 +76,6 @@ const MyList = () => {
         marginTop={"50px"}
         marginLeft={"100px"}
         marginRight={"100px"}
-        border={"1px solid teal"}
         h={"85vh"}
     >
       <Group attached>
@@ -90,9 +89,9 @@ const MyList = () => {
         />
         <InputAddon
         onClick={addMagnet}
-      
+        fontSize={"2xl"}
         >
-            Add
+          +
         </InputAddon>
       </Group>
       <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="100%">

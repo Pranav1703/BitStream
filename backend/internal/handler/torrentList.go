@@ -88,7 +88,7 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := claims["username"].(string)
-
+	fmt.Println("username: ",username)
 	result := db.Preload("MagnetList").Where("username = ?", username).First(&user)
 	if result.Error != nil {
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)

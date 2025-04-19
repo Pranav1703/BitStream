@@ -1,42 +1,25 @@
 import { Box, Input, VStack, Text, Button } from "@chakra-ui/react"
 import {
   PasswordInput,
-  PasswordStrengthMeter,
 } from "../components/ui/password-input"
 import { Link } from "react-router-dom"
 import { useContext, useState } from "react"
 import axios, { AxiosError } from "axios"
 import { AppContext } from "../App"
-import { Tooltip } from "../components/ui/tooltip"
+
 
 const Login = () => {
   
   const [username,setUsername] = useState<string>("")
   const [pass,setPass] = useState<string>("")
   const [msg,setMsg] = useState<string>("")
-  const [passStrength,setPassStrength] = useState<number>(0) 
+
   const {setUser} = useContext(AppContext)
-  const [showTooltip, setShowTooltip] = useState(false);
 
-
-  const passwordToolTip = `Password should contain:
-    • At least one special character.
-    • Should contain numbers.
-    • Should contain a Capital Letter.`;
 
   const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const value = e.target.value
     setPass(value)
-    let strength = 1;
-  
-    if (/[A-Z]/.test(value)) strength++; 
-    if (/\d/.test(value) && value.length > 8) strength++;    
-    if (/[@#$*&_-]/.test(value) && value.length > 8) strength++;
-    if (value.length >= 8) strength++;  
-
-
-    setPassStrength(strength)
-  
   }
 
   const submit = async()=>{
@@ -81,27 +64,15 @@ const Login = () => {
         justify={"space-evenly"}
         
         >
-          <Text fontSize={"x-large"} fontWeight={"bolder"}>Login</Text>
+          <Text fontSize={"x-large"} fontWeight={"bolder"} color={"teal.400"}>Login</Text>
           <Input placeholder="Enter Username" name="username" autoComplete={"on"} value={username} onChange={(e)=>setUsername(e.target.value)}  w={"350px"} variant={"flushed"}/>
-          <Tooltip 
-            open={showTooltip}
-            positioning={{placement:'right'}} 
-            showArrow 
-            content={<Box whiteSpace={"pre-line "}>{passwordToolTip}</Box>}
-          >
-            <PasswordInput 
-              placeholder="Enter Password" 
-              name="password" 
-              value={pass} 
-              onChange={(e)=>handlePasswordChange(e)} 
-              variant={"flushed"}
-              onFocus={() => setShowTooltip(true)}
-              onBlur={() => setShowTooltip(false)}
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            />
-          </Tooltip>
-          <PasswordStrengthMeter max={5} value={passStrength} w={"100%"}/>
+          <PasswordInput 
+            placeholder="Enter Password" 
+            name="password" 
+            value={pass} 
+            onChange={(e)=>handlePasswordChange(e)} 
+            variant={"flushed"}
+          />
           <Text>
             {msg}
           </Text>
@@ -111,7 +82,12 @@ const Login = () => {
             Login
           </Button>
           <Text>
-            new user? <Link to={"/signup"}>Sign up</Link>
+            new user? 
+            <Link to={"/signup"}>
+              <Text as="span" color="teal.400" fontWeight="bold" textDecoration="underline" pl={1}>
+                 Login
+              </Text>
+            </Link>
           </Text>
         </VStack> 
     </Box>

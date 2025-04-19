@@ -1,4 +1,4 @@
-import { Box, HStack, Input, Kbd, Spinner, Table, Button, Text } from "@chakra-ui/react"
+import { Box, HStack, Input, Kbd, Spinner, Table, Button, Text, InputAddon, Group } from "@chakra-ui/react"
 import axios from "axios"
 import { useContext, useState, useRef, useEffect } from "react"
 import { LuSearch } from "react-icons/lu"
@@ -64,19 +64,27 @@ const AnimePage = () => {
     h={"85vh"}
     >
        <HStack width="full" justifyContent={"center"}>
-        <InputGroup
-          startElement={<LuSearch />}
-          endElement={<Kbd>ctrl+/</Kbd>}
-        >
-          <Input placeholder="Search movies" 
-                w={"550px"} 
-                ref={searchInputRef} 
-                onChange={(e)=>setSearchQuery(e.target.value)}
-                borderWidth={"2px"}
-                onKeyDown={search}
-                name="search-anime"
-          />
-        </InputGroup>
+        <Group attached>
+          <InputGroup
+            startElement={<LuSearch />}
+            endElement={<Kbd>ctrl+/</Kbd>}
+          >
+            <Input placeholder="Search movies" 
+                  w={"550px"} 
+                  ref={searchInputRef} 
+                  onChange={(e)=>setSearchQuery(e.target.value)}
+                  borderWidth={"2px"}
+                  onKeyDown={search}
+                  name="search-anime"
+            />
+          </InputGroup>
+          <InputAddon
+            onClick={searchAnime}
+            fontSize={"2xl"}
+          >
+            search
+          </InputAddon>
+        </Group>
        </HStack>
 
       <HStack

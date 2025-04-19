@@ -13,6 +13,40 @@ type SearchResults = {
   movies: Movies[]
 }
 
+const darkCss = {
+  "&::-webkit-scrollbar": {
+    width: "8px",
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "#2D3748", // Dark track
+    borderRadius: "10px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#4A6568", // Thumb color
+    borderRadius: "10px",
+  },
+  "&::-webkit-scrollbar-thumb:hover": {
+    background: "#718096", // Hover effect
+  },
+}
+
+const lightCss = {
+  "&::-webkit-scrollbar": {
+    width: "8px",
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "#EEEEEE", // Dark track
+    borderRadius: "10px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#76ABAE", // Thumb color
+    borderRadius: "10px",
+  },
+  "&::-webkit-scrollbar-thumb:hover": {
+    background: "#718096", // Hover effect
+  },
+}
+
 const MoviesPage = () => {
 
   const {recentMovies, setRecentMovies} = useContext(AppContext)
@@ -131,22 +165,24 @@ const MoviesPage = () => {
       h={"100%"}
       wrap={"wrap"}
       overflow={"auto"}
-      css={{
-        "&::-webkit-scrollbar": {
-          width: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-          background: "#2D3748", // Dark track
-          borderRadius: "10px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#4A6568", // Thumb color
-          borderRadius: "10px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": {
-          background: "#718096", // Hover effect
-        },
-      }}
+      // css={{
+      //   "&::-webkit-scrollbar": {
+      //     width: "8px",
+      //   },
+      //   "&::-webkit-scrollbar-track": {
+      //     background: "#2D3748", // Dark track
+      //     borderRadius: "10px",
+      //   },
+      //   "&::-webkit-scrollbar-thumb": {
+      //     background: "#4A6568", // Thumb color
+      //     borderRadius: "10px",
+      //   },
+      //   "&::-webkit-scrollbar-thumb:hover": {
+      //     background: "#718096", // Hover effect
+      //   },
+      // }}
+      _dark={darkCss}
+      _light={lightCss}
       >
         {
           

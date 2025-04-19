@@ -23,8 +23,8 @@ const ProfileMenu = ({username,logoutHandler}:{username:string,logoutHandler:()=
       </Button>
     </MenuTrigger>
     <MenuContent>
-      <MenuItem value="user">Hi, {username}!</MenuItem>
-      <MenuItem value="Edit">Edit Profile</MenuItem>
+      {/* <MenuItem value="user">Hi, {username}!</MenuItem>
+      <MenuItem value="Edit">Edit Profile</MenuItem> */}
       <MenuItem
         value="logout"
         color="fg.error"
@@ -40,7 +40,7 @@ const ProfileMenu = ({username,logoutHandler}:{username:string,logoutHandler:()=
 
 const Header = () => {
     const navigate = useNavigate()
-    const {user,setUser} = useContext(AppContext)
+    const {user,setUser,setAnime,setUserList} = useContext(AppContext)
   
     const logout = async()=>{
       try {
@@ -49,6 +49,8 @@ const Header = () => {
         })
         setUser("")
         navigate("/login")
+        setAnime([])
+        setUserList([])
       } catch (error) {
         console.log(error)
       }

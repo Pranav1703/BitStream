@@ -7,8 +7,9 @@
     font-weight: 700;
     font-family: sans-serif;
     text-decoration: none;
-    color: #333;
-    border: 2px solid #333;
+    color: #dddcdc;
+    background:gray.800;
+    border: 2px solid #535353;
     letter-spacing: 2px;
     text-align: center;
     position: relative;
@@ -28,13 +29,30 @@
     left: 0;
     width: 0;
     height: 100%;
-    background: #04f4d0;
     transition: all .35s;
     border-radius: 5px;
   }
+
+  .play-btn-light{
+    color: #422e2e;
+    border:2px solid #76ABAE;
+  }
+
+  .play-btn-dark{
+    color: #dddcdc;
+    background:gray.800;
+  }
+
+  .play-btn-light::after {
+    background: #3ef7f0;
+  }
+  
+  .play-btn-dark::after {
+    background: #d0d0d0;
+  }
   
   .play-btn:hover{
-    color: #5f5d5d;
+    color: #464545;
   }
   
   .play-btn:hover:after{
