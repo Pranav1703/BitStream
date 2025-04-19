@@ -23,8 +23,8 @@ const ProfileMenu = ({username,logoutHandler}:{username:string,logoutHandler:()=
       </Button>
     </MenuTrigger>
     <MenuContent>
-      {/* <MenuItem value="user">Hi, {username}!</MenuItem>
-      <MenuItem value="Edit">Edit Profile</MenuItem> */}
+      <MenuItem value="user">Hi, {username}!</MenuItem>
+      <MenuItem value="Edit">Edit Profile</MenuItem>
       <MenuItem
         value="logout"
         color="fg.error"
