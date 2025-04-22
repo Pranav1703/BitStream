@@ -73,28 +73,29 @@ const MyList = () => {
 
   return (
     <Box
-        marginTop={"50px"}
+        marginTop={"40px"}
         marginLeft={"100px"}
         marginRight={"100px"}
         h={"85vh"}
     >
-      <Group attached>
+      <Group attached ml={"30%"}>
         <Input placeholder="Add magnet link" 
               w={"550px"}
               borderWidth={"2px"}
               name="add-magnet"
               value={magnet}
               onChange={(e)=>setMagnet(e.target.value)}
-
+              size={'lg'}
         />
         <InputAddon
         onClick={addMagnet}
         fontSize={"2xl"}
+        cursor={"pointer"}
         >
           +
         </InputAddon>
       </Group>
-      <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="100%">
+      <Table.ScrollArea borderWidth="2px" rounded="md" w={"100%"} height="95%">
         <Table.Root size="lg" stickyHeader interactive showColumnBorder>
           <Table.Header>
             <Table.Row bg="bg.subtle" >

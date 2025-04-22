@@ -159,7 +159,7 @@ const AnimePage = () => {
               >
                 {
                   searchQuery.length===0?(
-                    <Text fontSize={"lg"} color={"turquoise"}>
+                    <Text fontSize={"lg"} color={"darkturquoise"} fontWeight={"bolder"}>
                       Turn on VPN to search for anime.
                     </Text>
                   ):(

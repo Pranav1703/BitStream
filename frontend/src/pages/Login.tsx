@@ -85,7 +85,7 @@ const Login = () => {
             new user? 
             <Link to={"/signup"}>
               <Text as="span" color="teal.400" fontWeight="bold" textDecoration="underline" pl={1}>
-                 Login
+                 SignUp
               </Text>
             </Link>
           </Text>
