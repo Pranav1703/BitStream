@@ -2,15 +2,13 @@ package handler
 
 import (
 	"BitStream/internal/authMiddleware"
-	"BitStream/internal/database/model"
-	"log"
-	"net/http"
 	"BitStream/internal/database"
+	"BitStream/internal/database/model"
+	"BitStream/internal/util"
 	"encoding/json"
 	"fmt"
-
-
-	"github.com/anacrolix/torrent"
+	"log"
+	"net/http"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -27,15 +25,20 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 
 	var user model.User
 	db := database.GetDb()
-	c, _ := torrent.NewClient(nil)
-	defer c.Close()
-	t, err := c.AddMagnet(rBody.Magnet)
-	if err != nil || t == nil {
-		http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
-		log.Println("Failed to add magnet link.")
-		return
+	// c, _ := torrent.NewClient(nil)
+	// defer c.Close()
+	// t, err := c.AddMagnet(rBody.Magnet)
+	// if err != nil || t == nil {
+	// 	http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
+	// 	log.Println("Failed to add magnet link.")
+	// 	return
+	// }
+	// <-t.GotInfo()
+	t,err := util.GetTorrentInfo(rBody.Magnet)
+	if err!=nil || t==nil {
+		// http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
+		// log.Println("Failed to add magnet link.")
 	}
-	<-t.GotInfo()
 
 	claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
 	if !ok {

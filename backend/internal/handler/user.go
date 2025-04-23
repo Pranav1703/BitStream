@@ -25,7 +25,6 @@ func RegisterUser(w http.ResponseWriter,r *http.Request) {
 		http.Error(w,"couldnt decode request body",http.StatusInternalServerError)
 		return 
 	}
-
 	db := database.GetDb()
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userInfo.Password), bcrypt.DefaultCost)

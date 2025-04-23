@@ -80,5 +80,15 @@ func ExtractHashFromMagnet(magnet string) string {
 	return ""
 }
 
+func GetTorrentInfo(magnet string) (*torrent.Torrent,error) {
+	c, _ := torrent.NewClient(nil)
+	defer c.Close()
+	t, err := c.AddMagnet(magnet)
+	if err != nil || t == nil {
+		return nil,err
+	}
+	<-t.GotInfo()
+	return t,nil
+}
 
 //ffmpeg -y -i "input.mkv" -map 0:s:0? "output.vtt" - force overwrites existing subs file 

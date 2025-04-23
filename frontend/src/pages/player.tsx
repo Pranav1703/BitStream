@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { useSearchParams } from "react-router-dom";
@@ -17,19 +18,18 @@ const Player = () => {
   }, [magnet]);
 
   return (
-    <div>
+    <Box>
     
       {streamURL && (
-        <div style={{ marginTop: "20px" }}>
+        <Box display={"flex"} justifyContent={"center"} mt={"20px"}>
           <ReactPlayer url={streamURL} 
             controls
-            
             width="80%" 
-            height="600px" 
+            height="100%" 
           />
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
