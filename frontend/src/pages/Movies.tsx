@@ -7,6 +7,7 @@ import { Movies } from "../types"
 import { LuSearch } from "react-icons/lu"
 import { InputGroup } from "../components/ui/input-group"
 import Mousetrap from 'mousetrap'
+import MovieCard2 from "../components/MovieCard2"
 
 type SearchResults = {
   msg: string
@@ -201,6 +202,7 @@ const MoviesPage = () => {
                   <MovieCard key={i}  title={movie.title} imgUrl={movie.imgUrl} magnets={movie.magnets}/>
                 ))
               }
+              <MovieCard2 title={recentMovies[0].title} imgUrl={recentMovies[0].imgUrl} magnets={recentMovies[0].magnets}/>
             </>
           ):(
             <>

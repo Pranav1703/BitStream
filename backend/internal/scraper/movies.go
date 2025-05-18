@@ -127,15 +127,21 @@ func MovieSearchResults(query string) *SearchResults{
 
 		linkInfos = e.ChildTexts(".mv_button_css>small")
 		magnetLinks = e.ChildAttrs(".mv_button_css","href")
-
+		
 		for i:=0; i<len(linkInfos); i++{
 			magnet := &Magnet{}
 			
 			info := linkInfos[i]
 			splitInfo := strings.Split(info," ")
 			
-			magnet.Size = splitInfo[0] + " " + splitInfo[1]
-			magnet.Quality = splitInfo[2]
+			if len(splitInfo) == 3{
+				magnet.Size = splitInfo[0] + " " + splitInfo[1]
+				magnet.Quality = splitInfo[2]
+			}else if len(splitInfo)==2{
+				magnet.Size = splitInfo[0]
+				magnet.Quality = splitInfo[1]
+			}
+
 			magnet.Link = magnetLinks[i]
 
 			movie.Magnets = append(movie.Magnets, *magnet)
@@ -146,7 +152,6 @@ func MovieSearchResults(query string) *SearchResults{
 	})
 
 	c.OnHTML(".boxed",func(h *colly.HTMLElement) {
-
 		h.Request.Visit(h.ChildAttr("a","href"))
 	})
 	
@@ -159,12 +164,17 @@ func MovieSearchResults(query string) *SearchResults{
 		// fmt.Println("\nGot response from ", r.Request.URL)
 	})
 
+	c.OnError(func(r *colly.Response, err error) {
+		log.Println(err)
+	})
+
 	err := c.Visit(fmt.Sprintf("https://www.5movierulz.gdn/search_movies?s=%s",query))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
-	if len(movies)!= 0{
-		sr.Movies = movies
-	}
+	// if len(movies)!= 0{
+	// 	sr.Movies = movies
+	// }
+	sr.Movies = movies
 	return sr
 }
