@@ -1,65 +1,113 @@
-import { Image,Box, Text, Button, Card } from "@chakra-ui/react"
-import { FaPlay } from "react-icons/fa";    
-import { Link } from "react-router-dom";
-import { Movies } from "../types";
-import { useColorMode } from "../components/ui/color-mode";
-import { useEffect, useState } from "react";
-const MovieCard = ({title,imgUrl,magnets}:Movies) => {
+'use client'
 
-  const { colorMode } = useColorMode();
-  const [btnMode,setBtnMode] = useState<string>("play-btn-dark")
-  useEffect(() => {
-    if(colorMode=="light"){
-      setBtnMode("play-btn-light")
-    }else{
-      setBtnMode("play-btn-dark")
-    }
-  }, [colorMode])
-  
+import {
+  Flex,
+  Box,
+  Image,
+  Popover, 
+  Portal ,
+  Table
+} from '@chakra-ui/react'
+import { useColorMode } from "./ui/color-mode";
+import { Magnet, Movies } from '../types';
 
+import { FaPlay } from "react-icons/fa"; 
+import { Link } from 'react-router-dom';
+
+type PopOptionsProps = {
+  name: string
+  magnetLinks: Magnet[]
+}
+
+const BottomPart = ({name,magnetLinks}:PopOptionsProps) => {
   return (
-
-    <Card.Root w={"270px"} maxW="270px" maxH={"400px"} overflow="auto" _light={{bg:"EEEEEE", border:"2px solid #76ABAE"}} _dark={{bg:"gray.800"}} m={"8px"}>
-      <Image
-        src={imgUrl}
-        alt={title}
-        maxH={"250px"}
-        objectFit={"contain"}
-        mt={"15px"}
-        borderRadius={"5px"}
-      />
-      <Card.Body gap="2" _light={{bg:"EEEEEE",color:"rgb(44, 174, 181)"}} _dark={{bg:"gray.800"}} pt={"12px"}>
-        <Card.Title 
-        textAlign={"center"} 
-        display={"inline-block"} 
+    <Popover.Root positioning={{ placement: "bottom-end" }} size={"lg"}>
+      <Popover.Trigger asChild>
+        <Box
+        maxW={"240px"}
         whiteSpace={"nowrap"}
         overflow={"hidden"}
-        textOverflow="ellipsis"
-        title={title}
+        textOverflow="ellipsis"               
         >
-          {title}
-        </Card.Title>
-        {/* <Card.Description>
-        </Card.Description> */}
-      </Card.Body>
-      <Card.Footer gap="2" maxW={"280px"} display={"flex"} justifyContent={"space-around"}>
-        {
-          magnets.map((magnet,i)=>(
-            <Box key={i}>
-              <Button variant="outline" size={"xs"} p={1} className={`play-btn ${btnMode}`}>
-                <span>
-                  <FaPlay/>
-                  <Link to={`/player?magnet=${encodeURIComponent(magnet.link)}`}>
-                    <Text ml={"1px"}>{magnet.quality}</Text>
-                  </Link>
-                </span>
-              </Button>
-            </Box>
-          ))
-        }
-      </Card.Footer>
-    </Card.Root>
+          {name}
+        </Box>
+      </Popover.Trigger>
+      <Portal>
+        <Popover.Positioner>
+          <Popover.Content>
+            <Popover.Arrow />
+            <Popover.Body p={2}>
+               <Table.Root size="lg" stickyHeader>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.ColumnHeader>Quality</Table.ColumnHeader>
+                      <Table.ColumnHeader>Size</Table.ColumnHeader>
+                      <Table.ColumnHeader textAlign="end"></Table.ColumnHeader>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {magnetLinks.map((l,i) => (
+                      <Table.Row key={i}>
+                        <Table.Cell>{l.quality}</Table.Cell>
+                        <Table.Cell>{l.size}</Table.Cell>
+                        <Table.Cell textAlign="end" cursor={"pointer"}>
+                          <Link to={`/player?magnet=${encodeURIComponent(l.link)}`}>
+                            <FaPlay/>
+                          </Link>
+                          
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table.Root>
+            </Popover.Body>
+          </Popover.Content>
+        </Popover.Positioner>
+      </Portal>
+    </Popover.Root>
+  )
+}
 
+
+
+function MovieCard({title, imgUrl, magnets}:Movies) {
+
+    const {colorMode} = useColorMode()
+    
+  return (
+      <Box
+        bg={colorMode == 'light' ? 'white' : 'gray.800'}
+        maxW="280px"
+        h={"390px"}
+        borderWidth="1px"
+        rounded="lg"
+        shadow="lg"
+        m={3}
+        >
+
+        <Box>
+            <Image src={imgUrl} alt={`Picture of ${title}`} roundedTop="lg"   maxW="270px" objectFit={"fill"} w={"260px"} h={"300px"}/>
+
+            <Box p="2"  h={"22%"} flexDirection={"column"} alignContent={"center"}>
+                <Box
+                fontSize="2xl"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                textAlign={"center"}
+                cursor={"pointer"}
+                mt={4}
+                whiteSpace={"nowrap"}
+                overflow={"hidden"}
+                >
+                    {/* <Box>
+                        {title}
+                    </Box> */}
+                    <BottomPart name={title} magnetLinks={magnets}/>
+                </Box>
+            </Box>
+        </Box>
+      </Box>
   )
 }
 

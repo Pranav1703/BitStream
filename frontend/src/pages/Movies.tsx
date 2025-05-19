@@ -1,5 +1,4 @@
 import { Box, HStack, Input, Kbd, Spinner, Text } from "@chakra-ui/react"
-import MovieCard from "../components/MovieCard"
 import axios from "axios"
 import { useContext, useEffect, useRef, useState } from "react"
 import { AppContext } from "../App"
@@ -7,7 +6,7 @@ import { Movies } from "../types"
 import { LuSearch } from "react-icons/lu"
 import { InputGroup } from "../components/ui/input-group"
 import Mousetrap from 'mousetrap'
-import MovieCard2 from "../components/MovieCard2"
+import MovieCard from "../components/MovieCard"
 
 type SearchResults = {
   msg: string
@@ -166,22 +165,7 @@ const MoviesPage = () => {
       h={"100%"}
       wrap={"wrap"}
       overflow={"auto"}
-      // css={{
-      //   "&::-webkit-scrollbar": {
-      //     width: "8px",
-      //   },
-      //   "&::-webkit-scrollbar-track": {
-      //     background: "#2D3748", // Dark track
-      //     borderRadius: "10px",
-      //   },
-      //   "&::-webkit-scrollbar-thumb": {
-      //     background: "#4A6568", // Thumb color
-      //     borderRadius: "10px",
-      //   },
-      //   "&::-webkit-scrollbar-thumb:hover": {
-      //     background: "#718096", // Hover effect
-      //   },
-      // }}
+      // justifyContent={"space-between"}
       _dark={darkCss}
       _light={lightCss}
       >
@@ -202,7 +186,7 @@ const MoviesPage = () => {
                   <MovieCard key={i}  title={movie.title} imgUrl={movie.imgUrl} magnets={movie.magnets}/>
                 ))
               }
-              <MovieCard2 title={recentMovies[0].title} imgUrl={recentMovies[0].imgUrl} magnets={recentMovies[0].magnets}/>
+              
             </>
           ):(
             <>
