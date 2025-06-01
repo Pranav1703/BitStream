@@ -18,7 +18,7 @@ func RegisterRoutes(r *chi.Mux)  {
 	r.Get("/auth",handler.CheckAuth)
 	r.Get("/logout",handler.Logout)
 
-	r.With(authmiddleware.AuthenticateToken).Get("/progress",handler.TorrentProgress)
+	r.Get("/progress",handler.TorrentProgress)
 	r.With(authmiddleware.AuthenticateToken).Get("/stream",handler.StreamVideo)
 	
 	r.Route("/movies",func(r chi.Router) {

@@ -3,9 +3,10 @@ package scraper
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"strings"
 	"time"
-
+    "crypto/tls"
 	"github.com/gocolly/colly/v2"
 )
 
@@ -102,6 +103,10 @@ func MovieSearchResults(query string) *SearchResults{
 		Parallelism: 3,
 		Delay:       500 * time.Millisecond ,
 	})
+
+	c.WithTransport(&http.Transport{
+        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+    })
 
 	sr := &SearchResults{}
 	movies := []Movie{}

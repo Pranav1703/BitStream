@@ -44,7 +44,6 @@ func main() {
 	err := database.InitDb()
 	if err != nil {
 		log.Println(err)
-		fmt.Println("err db :")
 		return
 	}
 

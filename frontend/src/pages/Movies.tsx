@@ -179,7 +179,7 @@ const MoviesPage = () => {
                 ))
               }
             </>
-          ):recentMovies.length!==0 && searchQuery.length===0 ?(
+          ):recentMovies && searchQuery.length===0 ?(
             <>
               {
                 recentMovies.map((movie,i)=>(

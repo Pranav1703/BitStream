@@ -19,9 +19,8 @@ const Player = () => {
 
   return (
     <Box>
-    
       {streamURL && (
-        <Box display={"flex"} justifyContent={"center"} mt={"20px"}>
+        <Box display={"flex"} justifyContent={"center"} mt={"100px"}>
           <ReactPlayer url={streamURL} 
             controls
             width="80%" 

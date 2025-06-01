@@ -16,7 +16,7 @@ var (
 
 func StartServer(r *chi.Mux) {
 	server = &http.Server{
-		Addr: "localhost:3000",
+		Addr: ":3000",
 		Handler: r,
 	}
 

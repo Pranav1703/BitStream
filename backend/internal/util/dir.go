@@ -42,8 +42,7 @@ func MonitorDownloadsDir(closeSignal chan os.Signal){
 			if err!=nil{
 				log.Println("error reading dir: ",err)
 			}
-			fmt.Println("files in 'downloads' dir")
-			fmt.Println(files)
+			fmt.Println("files in 'downloads' dir --> ",files)
 			for _,file := range files{
 				
 				info,err := os.Stat(filepath.Join("./downloads", file.Name()))

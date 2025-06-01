@@ -1,0 +1,7 @@
+.git
+README.md
+downloads/
+.torrent.db
+.torrent.db-wal
+.torrent.db-shm
+info.txt
