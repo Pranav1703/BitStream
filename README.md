@@ -28,7 +28,7 @@ DB_PORT=
 DB_NAME=
 SECRET_KEY=
 ```
-Set DB_HOST=localhost if running the backend locally.
+Set DB_HOST=localhost if running the backend locally.  
 Set DB_HOST=db if using Docker Compose (where db is the name of the database service).
 
 ### Running the App Locally
