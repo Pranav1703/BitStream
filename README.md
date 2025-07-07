@@ -6,7 +6,7 @@ BitStream is a web-based application that allows users to stream videos directly
 -Go (1.18+)  
 -Node.js (16+)  
 -Docker (optional)  
--PostgreSQL (if using watchlist/auth features)  
+-PostgreSQL  
 
 Clone the repo
 ```bash
