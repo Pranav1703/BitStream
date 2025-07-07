@@ -7,4 +7,4 @@ type User struct{
 	MagnetList  []Magnet `gorm:"foreignKey:UserId"`
 }
 
-//gorm.model -> {id,createdAt,updatedAt} ???
+//gorm.model -> {id,createdAt,updatedAt} 

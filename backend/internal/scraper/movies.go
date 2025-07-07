@@ -29,11 +29,15 @@ type SearchResults struct {
 
 
 func ScrapeRecentMovies() []Movie {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+    	colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"),
+	)
+
+	c.SetRequestTimeout(30 * time.Second)
 
 	var movies []Movie
 
-	url := "https://www.5movierulz.gdn/category/hollywood-featured"
+	url := "https://www.5movierulz.voto/category/hollywood-featured"
 
 	c.OnHTML(".entry-content",func(e *colly.HTMLElement) {
 		movie := &Movie{}
@@ -96,8 +100,10 @@ func ScrapeRecentMovies() []Movie {
 
 func MovieSearchResults(query string) *SearchResults{
 	c := colly.NewCollector(
-		
+    	colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"),
 	)
+
+	c.SetRequestTimeout(30 * time.Second)
 
 	c.Limit(&colly.LimitRule{
 		Parallelism: 3,
@@ -173,7 +179,7 @@ func MovieSearchResults(query string) *SearchResults{
 		log.Println(err)
 	})
 
-	err := c.Visit(fmt.Sprintf("https://www.5movierulz.gdn/search_movies?s=%s",query))
+	err := c.Visit(fmt.Sprintf("https://www.5movierulz.voto/search_movies?s=%s",query))
 	if err != nil {
 		log.Println(err)
 	}

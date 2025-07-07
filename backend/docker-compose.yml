@@ -1,12 +1,12 @@
 services:
-  bs-backend:
-    container_name: bs-backend
+  bs-server:
+    container_name: bs-server
     build: .
-    image: bs-backend
+    image: bs-server
     env_file:
       - .env
     ports:
-      - "5000:3000"
+      - "5000:5000"
     depends_on:
       - db
   
