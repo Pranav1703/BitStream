@@ -1,0 +1,58 @@
+services:
+  # ==============================
+  # 1. Frontend (React + Nginx)
+  # ==============================
+  frontend:
+    image: pranav1703/bs-frontend:latest
+    container_name: bs-frontend
+    restart: always
+    ports:
+      - "80:80"  # Accessible at http://localhost
+    depends_on:
+      - bs-server
+    networks:
+      - app-network
+
+  # ==============================
+  # 2. Backend (Go API)
+  # ==============================
+  bs-server:
+    image: pranav1703/bs-backend:latest
+    container_name: bs-server  # MUST match the hostname in nginx.conf
+    restart: always
+    ports:
+      - "5000:5000" # Exposed for internal Nginx access (and debugging)
+    env_file:
+      - .env  # Reads secrets from your local file
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # ==============================
+  # 3. Database (Postgres)
+  # ==============================
+  db:
+    image: postgres:latest
+    container_name: bs-db
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - "5432:5432"
+
+# ==============================
+# Networks & Volumes
+# ==============================
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

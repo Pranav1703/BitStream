@@ -14,7 +14,7 @@ const Player = () => {
       const encodedMagnet = encodeURIComponent(magnet);
       setStreamURL(`${import.meta.env.VITE_SERVER}/stream?magnet=${encodedMagnet}`);
     }
-    console.log("magnet link -> ",magnet)
+    // console.log("magnet link -> ",magnet)
   }, [magnet]);
 
   return (

@@ -20,7 +20,8 @@ var TClient *torrent.Client
 
 func InitTorrentClient() error {
 	if TClient != nil {
-		return nil // Client is already initialized
+		fmt.Println("Torrect Client already initialized")
+		return nil
 	}
 
 	cfg := torrent.NewDefaultClientConfig()
@@ -28,10 +29,7 @@ func InitTorrentClient() error {
 
 	var err error
 	TClient, err = torrent.NewClient(cfg)
-	if err != nil {
-		return fmt.Errorf("failed to initialize torrent client: %w", err)
-	}
-	return nil
+	return err
 }
 
 func CloseClient() {

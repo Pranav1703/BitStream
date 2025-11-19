@@ -18,8 +18,7 @@ func InitDb() (error){
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Warning: No .env file found.",err)
-		return err
+		log.Println("Warning: No .env file found. Relying on System Env Variables.")
 	}
 
 	host := os.Getenv("DB_HOST")

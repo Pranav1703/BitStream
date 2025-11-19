@@ -16,10 +16,9 @@ WORKDIR /app
 
 # Copy only the binary
 COPY --from=builder /app/bs-backend .
-COPY --from=builder /app/.env .
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["./bs-backend"]

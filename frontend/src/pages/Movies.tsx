@@ -122,7 +122,7 @@ const MoviesPage = () => {
     })
 
 
-    if(recentMovies.length===0){
+    if(recentMovies &&recentMovies.length===0){
       getRecentMovies()
     }else{
       console.log("recent movies already retrieved: ",recentMovies)

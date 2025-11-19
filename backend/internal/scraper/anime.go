@@ -47,7 +47,7 @@ func SearchAnime(query string) []AnimeInfo {
 
 	fmt.Println(allAnime)
 	query = strings.Join(strings.Split(query, " "), "+")
-	err := c.Visit(fmt.Sprintf("https://nyaa.si/?q=%s",query))
+	err := c.Visit(fmt.Sprintf("https://nyaa.land/?q=%s",query))
 	if err != nil {
 		log.Println(err)
 		return allAnime

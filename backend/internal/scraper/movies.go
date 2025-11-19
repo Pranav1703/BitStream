@@ -37,7 +37,7 @@ func ScrapeRecentMovies() []Movie {
 
 	var movies []Movie
 
-	url := "https://www.5movierulz.voto/category/hollywood-featured"
+	url := "https://www.5movierulz.tienda/category/hollywood-featured"
 
 	c.OnHTML(".entry-content",func(e *colly.HTMLElement) {
 		movie := &Movie{}
@@ -179,7 +179,7 @@ func MovieSearchResults(query string) *SearchResults{
 		log.Println(err)
 	})
 
-	err := c.Visit(fmt.Sprintf("https://www.5movierulz.voto/search_movies?s=%s",query))
+	err := c.Visit(fmt.Sprintf("https://www.5movierulz.tienda/search_movies?s=%s",query))
 	if err != nil {
 		log.Println(err)
 	}

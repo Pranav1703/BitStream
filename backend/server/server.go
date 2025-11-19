@@ -27,7 +27,7 @@ func StartServer(r *chi.Mux) {
 
 func StopServer(){
 
-	ctx ,cancel := context.WithTimeout(context.Background(),500*time.Millisecond)
+	ctx ,cancel := context.WithTimeout(context.Background(),5*time.Second)
 	defer cancel()
 
 	err := server.Shutdown(ctx)
