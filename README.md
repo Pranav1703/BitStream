@@ -39,14 +39,14 @@ VITE_SERVER="{your-backend-url}"
 
 backend/env
 ```
-DB_USER=
-DB_PASS=
-DB_HOST=
-DB_PORT=
+DB_USER={yourpostgresUsername}
+DB_PASS={yourpostgresPassword}
+DB_HOST=localhost
+DB_PORT=5432
 DB_NAME=BitStream
-SECRET_KEY=
+SECRET_KEY=replace_this-with_something_else_or-keep_it
 ```
-Set DB_HOST=localhost since you are running the backend locally.  
+.  
 
 ### 2. using docker
 create .env in root folder
