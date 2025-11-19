@@ -3,35 +3,22 @@ BitStream is a web-based application that allows users to stream videos directly
 
 ## getting started
 ### Prerequisites
--Go (1.18+)  
--Node.js (16+)  
--Docker (optional)  
--PostgreSQL  
+**For running via Docker (Recommended):**
+- Docker & Docker Compose
+
+**For Local Development:**
+- Go (1.24+)
+- Node.js (22+)
+- PostgreSQL (Local installation) 
 
 Clone the repo
 ```bash
 git clone https://github.com/your-username/bitstream.git
 cd bitstream
 ```
-### env
-frontend/env
-```
-VITE_SERVER="{your-backend-url}"
-```
 
-backend/env
-```
-DB_USER=
-DB_PASS=
-DB_HOST=
-DB_PORT=
-DB_NAME=
-SECRET_KEY=
-```
-Set DB_HOST=localhost if running the backend locally.  
-Set DB_HOST=db if using Docker Compose (where db is the name of the database service).
-
-### Running the App Locally
+## Running the App
+### 1. Locally
 Backend
 ```bash
 cd backend
@@ -43,6 +30,42 @@ frontend
 cd frontend
 npm install
 npm run dev
+```
+create env files.
+frontend/env
+```
+VITE_SERVER="{your-backend-url}"
+```
+
+backend/env
+```
+DB_USER=
+DB_PASS=
+DB_HOST=
+DB_PORT=
+DB_NAME=BitStream
+SECRET_KEY=
+```
+Set DB_HOST=localhost since you are running the backend locally.  
+
+### 2. using docker
+create .env in root folder
+/.env
+```
+DB_USER={yourpostgresUsername}
+DB_PASS={yourpostgresPassword}
+
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=BitStream
+SECRET_KEY=replace_this-with_something_else_or-keep_it
+
+# This creates the DB automatically on first run
+POSTGRES_DB=BitStream
+```
+now run this command
+```bash
+docker compose up -d
 ```
 
 ## RoadMap
