@@ -37,7 +37,7 @@ func ScrapeRecentMovies() []Movie {
 
 	var movies []Movie
 
-	url := "https://www.5movierulz.tienda/category/hollywood-featured"
+	url := "https://www.5movierulz.gratis/category/hollywood-featured"
 
 	c.OnHTML(".entry-content",func(e *colly.HTMLElement) {
 		movie := &Movie{}

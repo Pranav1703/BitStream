@@ -56,7 +56,7 @@ func TorrentProgress(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
+// ffmpeg -i input.mkv -map 0:s:0 subs.srt
 func StreamVideo(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
 	// fmt.Println("Params: ",params.Get("magnet"))
@@ -127,7 +127,6 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "video/mp4")
 	w.Header().Set("Accept-Ranges", "bytes") // Enable seeking
 
-	//http.ServeContent(w, r, videoFile.DisplayPath(), time.Unix(videoFile.Torrent().Metainfo().CreationDate, 0), reader)
 	http.ServeContent(w, r, videoFile.DisplayPath(), time.Now(), reader)
 
 }

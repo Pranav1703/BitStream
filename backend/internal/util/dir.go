@@ -58,6 +58,4 @@ func MonitorDownloadsDir(closeSignal chan os.Signal){
 			time.Sleep(1*time.Hour)
 		}
 	}
-	
-
 }
