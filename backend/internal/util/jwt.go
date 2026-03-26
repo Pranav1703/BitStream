@@ -33,7 +33,7 @@ func VerifyToken(r *http.Request) (string, error) {
 		return "", fmt.Errorf("no cookie found")
 	}
 
-	// Parse and validate the token
+
 	tokenString := cookie.Value
 	// claims := jwt.MapClaims{}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -53,7 +53,7 @@ func VerifyToken(r *http.Request) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("invalid token data")
 	}
-	
+
 	username, ok := claims["username"].(string)
 	if !ok {
 		return "", fmt.Errorf("invalid token data")

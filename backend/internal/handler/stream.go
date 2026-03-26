@@ -13,6 +13,7 @@ import (
 
 	"github.com/anacrolix/torrent"
 	"github.com/gorilla/websocket"
+	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
 type ReqBody struct {
@@ -108,6 +109,8 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	extractSubs(videoFile.Path())
+	
 	for {
 		downloaded := videoFile.BytesCompleted()
 		totalSize := videoFile.Length()
@@ -141,4 +144,17 @@ func isVideoFile(filename string) bool {
 		}
 	}
 	return false
+}
+
+func extractSubs(filePath string) {
+	err := ffmpeg.Input(filePath).
+		Output("./downloads/subs.srt", ffmpeg.KwArgs{
+			"map": "0:s:0",
+		}).
+		OverWriteOutput().
+		Run()
+
+	if err != nil {
+		panic(err)
+	}
 }

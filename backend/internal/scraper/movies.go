@@ -32,7 +32,6 @@ func ScrapeRecentMovies() []Movie {
 	c := colly.NewCollector(
     	colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"),
 	)
-
 	c.SetRequestTimeout(30 * time.Second)
 
 	var movies []Movie
@@ -179,7 +178,7 @@ func MovieSearchResults(query string) *SearchResults{
 		log.Println(err)
 	})
 
-	err := c.Visit(fmt.Sprintf("https://www.5movierulz.tienda/search_movies?s=%s",query))
+	err := c.Visit(fmt.Sprintf("https://www.5movierulz.gratis/search_movies?s=%s",query))
 	if err != nil {
 		log.Println(err)
 	}
