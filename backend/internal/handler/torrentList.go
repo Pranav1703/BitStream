@@ -36,8 +36,8 @@ func AddMagnet(w http.ResponseWriter, r *http.Request) {
 	// <-t.GotInfo()
 	t,err := util.GetTorrentInfo(rBody.Magnet)
 	if err!=nil || t==nil {
-		// http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
-		// log.Println("Failed to add magnet link.")
+		http.Error(w, "Failed to add magnet link", http.StatusBadRequest)
+		log.Println("Failed to add magnet link.")
 	}
 
 	claims, ok := r.Context().Value(authmiddleware.UserContextKey).(jwt.MapClaims)
@@ -91,7 +91,7 @@ func GetList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := claims["username"].(string)
-	fmt.Println("username: ",username)
+
 	result := db.Preload("MagnetList").Where("username = ?", username).First(&user)
 	if result.Error != nil {
 		http.Error(w, result.Error.Error(), http.StatusInternalServerError)
