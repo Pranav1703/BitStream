@@ -2,6 +2,7 @@ package handler
 
 import (
 	"BitStream/internal/util"
+	"os"
 
 	"fmt"
 	"log"
@@ -46,7 +47,7 @@ func TorrentProgress(w http.ResponseWriter, r *http.Request) {
 		progress += rand.Intn(10)
 		err := conn.WriteJSON(map[string]any{"progress": progress})
 		if err != nil {
-			log.Println("WebSocket Write Error:", err)
+			log.Println("Write Error:", err)
 			break
 		}
 
@@ -91,6 +92,7 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		}
 		<-t.GotInfo()
 		log.Println("downloading...")
+		
 		t.DownloadAll()
 	} else {
 		log.Println("Reusing existing torrent")
@@ -108,8 +110,6 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "No video file found", http.StatusNotFound)
 		return
 	}
-
-	extractSubs(videoFile.Path())
 	
 	for {
 		downloaded := videoFile.BytesCompleted()
@@ -120,7 +120,7 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		log.Printf(" %d/%d bytes. downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
 		time.Sleep(2 * time.Second)
 	}
-
+	extractSubs(videoFile.Path())
 	util.MonitorTorrent(videoFile.Torrent())
 	
 	reader := videoFile.NewReader()
@@ -146,15 +146,38 @@ func isVideoFile(filename string) bool {
 	return false
 }
 
-func extractSubs(filePath string) {
-	err := ffmpeg.Input(filePath).
-		Output("./downloads/subs.srt", ffmpeg.KwArgs{
-			"map": "0:s:0",
-		}).
-		OverWriteOutput().
-		Run()
+func extractSubs(fileName string) {
+	cwd, _ := os.Getwd()
+    inputPath := filepath.Join(cwd, "downloads", "video", fileName)
+    
+	subDir := filepath.Join(cwd, "downloads", "subs")
+	os.MkdirAll(subDir, os.ModePerm)
 
-	if err != nil {
-		panic(err)
-	}
+	outputPath := filepath.Join(subDir, fileName+"subs.srt")
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+        if _, err := os.Stat(inputPath + ".part"); err == nil {
+            inputPath += ".part"
+            log.Printf("Found .part file, attempting extraction from: %s", inputPath)
+        } else {
+            log.Printf("Neither .mkv nor .mkv.part found at: %s", inputPath)
+            return
+        }
+    }
+
+    if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+        log.Printf("File not found at: %s", inputPath)
+        return
+    }
+
+    err := ffmpeg.Input(inputPath).
+        Output(outputPath, ffmpeg.KwArgs{
+            "c:s": "srt",
+            "map": "0:s:0",
+        }).
+        OverWriteOutput().
+        Run()
+
+    if err != nil {
+        log.Println("FFMPEG err: ", err)
+    }
 }

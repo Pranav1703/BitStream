@@ -50,11 +50,11 @@ func main() {
 	fmt.Println("connected to DB.")
 
 	go server.StartServer(r)
-	
+
 	fmt.Println("server started.")
 	log.Println("monitoring 'downloads' dir...")
 
-	go util.MonitorDownloadsDir(closeSignal)
+	go util.MonitorVideoDir(closeSignal)
 
 	<-closeSignal
 	if util.TClient != nil {
@@ -67,4 +67,5 @@ func main() {
 	database.CloseDb()
 	server.StopServer()
 }
+
 // in main branch

@@ -1,6 +1,9 @@
 .env
 downloads/
+subs/
 .torrent.db
 .torrent.db-wal
 .torrent.db-shm
 info.txt
+tmp/
+.air.toml

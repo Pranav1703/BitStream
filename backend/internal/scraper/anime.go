@@ -19,7 +19,9 @@ type AnimeInfo struct{
 
 func SearchAnime(query string) []AnimeInfo {
 
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"),
+	)
 
 	// c.WithTransport(&http.Transport{
 	// 	ResponseHeaderTimeout: 10 * time.Second, // Increase timeout
@@ -45,9 +47,9 @@ func SearchAnime(query string) []AnimeInfo {
 		fmt.Println("[Anime Scrapper] error : ",err)
 	})
 
-	fmt.Println(allAnime)
+
 	query = strings.Join(strings.Split(query, " "), "+")
-	err := c.Visit(fmt.Sprintf("https://nyaa.land/?q=%s",query))
+	err := c.Visit(fmt.Sprintf("https://nyaa.iss.one/?q=%s",query))
 	if err != nil {
 		log.Println(err)
 		return allAnime

@@ -20,6 +20,9 @@ func StartServer(r *chi.Mux) {
 		Handler: r,
 	}
 
+	fs := http.FileServer(http.Dir("./downloads/subs"))
+	http.Handle("/subs/", http.StripPrefix("/subs/", fs))
+
 	if err:= server.ListenAndServe(); err!=nil && err != http.ErrServerClosed{
 		log.Fatal("Server Error: ",err)
 	}

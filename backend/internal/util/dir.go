@@ -1,61 +1,52 @@
 package util
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"time"
 )
 
-func CreateDownloadsDir(){
-	if _, err := os.Stat("./downloads"); err != nil {
-		if os.IsNotExist(err) {
-			if err := os.Mkdir("./downloads", os.ModePerm); err != nil {
-				fmt.Println("Error creating directory:", err)
-			} else {
-				fmt.Println("created a new Dir for downloads")
-			}
-		} else {
-			fmt.Println(err)
-		}
-	} else {
-		dirInfo, err := os.Stat("./downloads")
-
-		if err != nil {
-			fmt.Println("error reading the Dir.", err)
-			return
-		}
-		fmt.Printf("%v directory already exists. perm: %v\n", dirInfo.Name(), dirInfo.Mode())
-	}
+func CreateDownloadsDir() {
+	dirs := []string{"./downloads/video", "./downloads/subs"}
+    for _, d := range dirs {
+        if err := os.MkdirAll(d, os.ModePerm); err != nil {
+            log.Printf("Error creating %s: %v", d, err)
+        } else {
+            log.Printf("Directory created: %s", d)
+        }
+    }
 }
 
-func MonitorDownloadsDir(closeSignal chan os.Signal){
+func MonitorVideoDir(closeSignal chan os.Signal) {
 
-	for{
+	for {
 		select {
 		case <-closeSignal:
 			log.Println("monitoring stopped.")
 			return
 		default:
-			files, err := os.ReadDir("./downloads")
-			if err!=nil{
-				log.Println("error reading dir: ",err)
+			targetDir := "./downloads/video"
+			files, err := os.ReadDir(targetDir)
+			if err != nil {
+				log.Println("error reading dir: ", err)
+				break
 			}
-			fmt.Println("files in './downloads' directory --> ",files)
-			for _,file := range files{
-				
-				info,err := os.Stat(filepath.Join("./downloads", file.Name()))
-				if err!=nil{
+			log.Println("files in './downloads/video' directory --> ", files)
+			for _, file := range files {
+				filePath := filepath.Join(targetDir, file.Name())
+				info, err := os.Stat(filePath)
+				if err != nil {
 					log.Println(err)
+					continue
 				}
 
-				if time.Since(info.ModTime()) > 3*time.Hour + 30*time.Minute { 
-					os.Remove(filepath.Join("./downloads", file.Name()))
+				if time.Since(info.ModTime()) > 3*time.Hour+30*time.Minute {
+					os.Remove(filePath)
 					log.Println("deleted ", file.Name())
 				}
 			}
-			time.Sleep(1*time.Hour)
+			time.Sleep(1 * time.Hour)
 		}
 	}
 }

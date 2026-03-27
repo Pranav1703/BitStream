@@ -25,7 +25,7 @@ func InitTorrentClient() error {
 	}
 
 	cfg := torrent.NewDefaultClientConfig()
-	cfg.DataDir = "./downloads"
+	cfg.DataDir = "./downloads/video"
 
 	var err error
 	TClient, err = torrent.NewClient(cfg)
