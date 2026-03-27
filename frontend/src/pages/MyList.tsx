@@ -34,7 +34,6 @@ const MyList = () => {
       })
 
       setUserList(res.data)
-      console.log(res.data)
     } catch (error) {
       console.log(error)
     }
@@ -48,7 +47,7 @@ const MyList = () => {
         withCredentials:true
       })
 
-      console.log("magnet deleted.",res)
+      console.log("magnet deleted.")
       await getList()
     } catch (error) {
       console.log(error)
@@ -64,7 +63,7 @@ const MyList = () => {
         await getList()
       })();
     }else{
-      console.log("resuing fetched list :",userList);
+      console.log("resuing fetched list");
     }
 
   }, [])

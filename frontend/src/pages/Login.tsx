@@ -40,7 +40,7 @@ const Login = () => {
       } catch (error) {
         console.log(error)
         const err = error as AxiosError
-        const resp = err.message
+        const resp = err.response?.data
         setMsg(`${resp}`)
       }
       setUsername("")
