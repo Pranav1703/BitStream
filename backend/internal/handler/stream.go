@@ -3,6 +3,8 @@ package handler
 import (
 	"BitStream/internal/util"
 	"os"
+	"regexp"
+	"strings"
 
 	"fmt"
 	"log"
@@ -149,32 +151,28 @@ func isVideoFile(filename string) bool {
 func extractSubs(fileName string) {
 	cwd, _ := os.Getwd()
     inputPath := filepath.Join(cwd, "downloads", "video", fileName)
-    
-	subDir := filepath.Join(cwd, "downloads", "subs")
-	os.MkdirAll(subDir, os.ModePerm)
-
-	outputPath := filepath.Join(subDir, fileName+"subs.srt")
-	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+    if _, err := os.Stat(inputPath); os.IsNotExist(err) {
         if _, err := os.Stat(inputPath + ".part"); err == nil {
             inputPath += ".part"
-            log.Printf("Found .part file, attempting extraction from: %s", inputPath)
         } else {
-            log.Printf("Neither .mkv nor .mkv.part found at: %s", inputPath)
+            log.Printf("Neither .mkv nor .mkv.part found for: %s", fileName)
             return
         }
     }
 
-    if _, err := os.Stat(inputPath); os.IsNotExist(err) {
-        log.Printf("File not found at: %s", inputPath)
-        return
-    }
+	reg, _ := regexp.Compile("[^a-zA-Z0-9]+")
+    safeName := reg.ReplaceAllString(strings.TrimSuffix(fileName, filepath.Ext(fileName)), "_")
+
+	subDir := filepath.Join(cwd, "downloads", "subs")
+    outputPath := filepath.Join(subDir, safeName+".vtt")
 
     err := ffmpeg.Input(inputPath).
         Output(outputPath, ffmpeg.KwArgs{
-            "c:s": "srt",
+            "c:s": "webvtt",
             "map": "0:s:0",
         }).
         OverWriteOutput().
+		ErrorToStdOut().
         Run()
 
     if err != nil {

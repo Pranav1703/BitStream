@@ -6,6 +6,7 @@ import (
 	"BitStream/server"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 
@@ -27,9 +28,7 @@ func main() {
 	r.Use(middleware.Logger)
 
 	r.Use(cors.Handler(cors.Options{
-		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedOrigins:   []string{"http://localhost:5173"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
@@ -39,6 +38,16 @@ func main() {
 
 	util.CreateDownloadsDir()
 
+	subDir := http.Dir("./downloads/subs")
+    subHandler := http.FileServer(subDir)
+
+    // 3. Mount it to the /subs/ path
+    // StripPrefix ensures Go looks for "file.vtt" instead of "subs/file.vtt"
+	r.Handle("/subs/*", http.StripPrefix("/subs/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	    w.Header().Set("Content-Type", "text/vtt")
+	    subHandler.ServeHTTP(w, r)
+	})))
+	
 	server.RegisterRoutes(r)
 
 	err := database.InitDb()
@@ -62,7 +71,7 @@ func main() {
 	}
 
 	fmt.Println("removing downloads dir")
-	os.RemoveAll("./downloads")
+	// os.RemoveAll("./downloads")
 
 	database.CloseDb()
 	server.StopServer()

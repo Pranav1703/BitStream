@@ -29,7 +29,7 @@ func RegisterRoutes(r *chi.Mux)  {
 	})
 
 	r.With(authmiddleware.AuthenticateToken).Get("/anime",handler.SearchAnime)
-
+	r.With(authmiddleware.AuthenticateToken).Get("/subtitles", handler.GetSubtitles)
 	r.Route("/magnet",func(r chi.Router){
 		r.Use(authmiddleware.AuthenticateToken)
 
@@ -37,7 +37,6 @@ func RegisterRoutes(r *chi.Mux)  {
 		r.Get("/list",handler.GetList)
 		r.Post("/delete",handler.DeleteEntry)
 	})
-
 }
 
 // chi routing docs
