@@ -42,7 +42,7 @@ func SearchAnime(query string) []AnimeInfo {
 	})
 
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("error : ",err)
+		fmt.Println("[Anime Scrapper] error : ",err)
 	})
 
 	fmt.Println(allAnime)

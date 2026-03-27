@@ -91,7 +91,7 @@ func ScrapeRecentMovies() []Movie {
 
 	err := c.Visit(url)
 	if err != nil {
-	 log.Fatal(err)
+	 log.Fatal("[Movie Scrapper] error: ",err)
 	}
 
 	return movies
@@ -112,6 +112,10 @@ func MovieSearchResults(query string) *SearchResults{
 	c.WithTransport(&http.Transport{
         TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
     })
+
+	c.OnError(func(r *colly.Response, err error) {
+		log.Println("[Movie Scrapper] error: ",err)
+	})
 
 	sr := &SearchResults{}
 	movies := []Movie{}
@@ -175,12 +179,12 @@ func MovieSearchResults(query string) *SearchResults{
 	})
 
 	c.OnError(func(r *colly.Response, err error) {
-		log.Println(err)
+		log.Println("[Movie Scrapper] error: ",err)
 	})
 
 	err := c.Visit(fmt.Sprintf("https://www.5movierulz.gratis/search_movies?s=%s",query))
 	if err != nil {
-		log.Println(err)
+		log.Println("[Movie Scrapper] error: ",err)
 	}
 	// if len(movies)!= 0{
 	// 	sr.Movies = movies
