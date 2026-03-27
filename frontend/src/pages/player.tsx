@@ -41,6 +41,9 @@ const Player = () => {
             height="100%" 
             config={{
               file: {
+                attributes: {
+                  crossOrigin: 'use-credentials' // This is the crucial line
+                },
                 tracks: (subFiles && subFiles.map((file, index) => ({
                   kind: 'subtitles',
                   src: `http://localhost:5000/subs/${file}`, 

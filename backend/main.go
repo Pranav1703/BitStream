@@ -45,6 +45,8 @@ func main() {
     // StripPrefix ensures Go looks for "file.vtt" instead of "subs/file.vtt"
 	r.Handle("/subs/*", http.StripPrefix("/subs/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	    w.Header().Set("Content-Type", "text/vtt")
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+        w.Header().Set("Access-Control-Allow-Credentials", "true")
 	    subHandler.ServeHTTP(w, r)
 	})))
 	
