@@ -41,7 +41,7 @@ const MyList = () => {
 
   const deleteEntry = async(link:string)=>{
     try {
-      const res = await axios.post(`${import.meta.env.VITE_SERVER}/magnet/delete`,{
+      await axios.post(`${import.meta.env.VITE_SERVER}/magnet/delete`,{
         magnet: link
       },{
         withCredentials:true

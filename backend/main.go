@@ -41,7 +41,7 @@ func main() {
 	subDir := http.Dir("./downloads/subs")
     subHandler := http.FileServer(subDir)
 
-    // 3. Mount it to the /subs/ path
+    // Mount it to the /subs/ path
     // StripPrefix ensures Go looks for "file.vtt" instead of "subs/file.vtt"
 	r.Handle("/subs/*", http.StripPrefix("/subs/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	    w.Header().Set("Content-Type", "text/vtt")
@@ -78,5 +78,3 @@ func main() {
 	database.CloseDb()
 	server.StopServer()
 }
-
-// in main branch
