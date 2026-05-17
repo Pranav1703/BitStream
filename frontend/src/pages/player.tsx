@@ -35,7 +35,7 @@ const Player = () => {
       {streamURL && (
         <Box display={"flex"} justifyContent={"center"} mt={"100px"}>
           <ReactPlayer url={streamURL} 
-            key={subFiles.length}
+            key={subFiles.length|| 0}
             controls
             width="80%" 
             height="100%" 

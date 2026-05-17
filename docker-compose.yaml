@@ -12,7 +12,7 @@ services:
       - bs-server
     networks:
       - app-network
-
+      
   # ==============================
   # 2. Backend (Go API)
   # ==============================
