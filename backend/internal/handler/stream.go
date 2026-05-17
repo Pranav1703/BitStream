@@ -5,61 +5,32 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 
 	"path/filepath"
 	"time"
 
 	"github.com/anacrolix/torrent"
-	"github.com/gorilla/websocket"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
+
 
 type ReqBody struct {
 	Magnet string `json:"magnet"`
 }
+
+var subExtractionStatus sync.Map
+
 const (
 	KB = 1024
 	MB = KB * 1024
 	GB = MB * 1024
 )
 
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  2048,
-	WriteBufferSize: 2048,
-	CheckOrigin:     func(r *http.Request) bool { return true },
-	// CheckOrigin: func(r *http.Request) bool {
-	// 	return r.Header.Get("Origin") == "https://yourfrontend.com"
-	// }
-}
-
-func TorrentProgress(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		fmt.Printf("failed to upgrade connection")
-		return
-	}
-	var progress int = 0
-	for {
-		progress += rand.Intn(10)
-		err := conn.WriteJSON(map[string]any{"progress": progress})
-		if err != nil {
-			log.Println("Write Error:", err)
-			break
-		}
-
-		if progress >= 100 {
-			break
-		}
-		time.Sleep(500 * time.Millisecond)
-	}
-
-}
 // ffmpeg -i input.mkv -map 0:s:0 subs.srt
 func StreamVideo(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
@@ -122,7 +93,19 @@ func StreamVideo(w http.ResponseWriter, r *http.Request) {
 		log.Printf(" %d/%d bytes. downloaded (%.2f%%)", downloaded, totalSize, float64(downloaded)/float64(totalSize)*100)
 		time.Sleep(2 * time.Second)
 	}
-	extractSubs(videoFile.Path())
+	hash := t.InfoHash().HexString()
+	if _, started := subExtractionStatus.LoadOrStore(hash, true); !started {
+	    go func() {
+	        // Pass 1: partial extraction (immediately, concurrent with streaming)
+	        extractSubs(videoFile.Path())
+	        // Wait for full download
+	        for videoFile.BytesCompleted() < videoFile.Length() {
+	            time.Sleep(5 * time.Second)
+	        }
+	        // Pass 2: full extraction (overwrites partial .vtt)
+	        extractSubs(videoFile.Path())
+	    }()
+	}
 	util.MonitorTorrent(videoFile.Torrent())
 	
 	reader := videoFile.NewReader()
@@ -166,7 +149,7 @@ func extractSubs(fileName string) {
 	subDir := filepath.Join(cwd, "downloads", "subs")
     outputPath := filepath.Join(subDir, safeName+".vtt")
 
-    err := ffmpeg.Input(inputPath).
+    err := ffmpeg.Input(inputPath, ffmpeg.KwArgs{"loglevel": "quiet"}).
         Output(outputPath, ffmpeg.KwArgs{
             "c:s": "webvtt",
             "map": "0:s:0",

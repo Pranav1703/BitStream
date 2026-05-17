@@ -11,7 +11,7 @@ func GetSubtitles(w http.ResponseWriter, r *http.Request) {
 	subDir := "./downloads/subs"
 
 	files, _ := os.ReadDir(subDir)
-	var availableSubs []string
+	availableSubs := []string{}
 
 	for _, f := range files {
 		// Find all subs that start with the movie name

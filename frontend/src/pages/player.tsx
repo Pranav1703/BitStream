@@ -35,7 +35,7 @@ const Player = () => {
       {streamURL && (
         <Box display={"flex"} justifyContent={"center"} mt={"100px"}>
           <ReactPlayer url={streamURL} 
-            key={subFiles.length|| 0}
+            key={subFiles.length}
             controls
             width="80%" 
             height="100%" 
@@ -46,7 +46,7 @@ const Player = () => {
                 },
                 tracks: (subFiles && subFiles.map((file, index) => ({
                   kind: 'subtitles',
-                  src: `http://localhost:5000/subs/${file}`, 
+                  src: `${import.meta.env.VITE_SERVER}/subs/${file}`, 
                   srcLang: 'en',
                   label: file,
                   default: index === 0 // Automatically enable the first one
