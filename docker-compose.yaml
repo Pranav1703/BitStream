@@ -33,7 +33,7 @@ services:
   # 3. Database (Postgres)
   # ==============================
   db:
-    image: postgres:latest
+    image: postgres:17-alpine
     container_name: bs-db
     restart: always
     environment:
